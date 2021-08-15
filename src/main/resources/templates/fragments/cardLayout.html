@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        th:fragment="layout(cardTemplate, menu, title, hasEditButton, editTitle, editLink, userT)"
+        th:replace="~{fragments/layout :: layout (~{::body},${menu}, ${title}, ${userT})}">
+
+<body>
+<!--<div class="container-fluid">-->
+<!--    <div class="row" style="margin-top: 20px;">-->
+<div class="col-md-6 col-md-offset-3" style="margin: auto;">
+    <div class="card">
+        <div class="card-header bg-dark">
+            <div class="row">
+                <div th:class="(hasEditButton)? 'col-10': 'col-12'">
+                    <h1 class="card-title text-white" th:text="${title}">Title</h1>
+                </div>
+                <div class="col-2 d-flex justify-content-center" th:if="${hasEditButton}">
+                    <a class="btn btn-link text-white align-self-center"
+                       th:href="@{${editLink}}" th:text="${editTitle}">Edit</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <th:block th:include="${cardTemplate}"/>
+        </div>
+    </div>
+</div>
+</body>
+</html>

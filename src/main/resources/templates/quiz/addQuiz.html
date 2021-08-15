@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/cardLayout :: layout (~{::body},'newQuiz', #{title.newQuiz}, false, '', '', ${user})}">
+
+<body>
+<form th:action="@{/quiz/new}" method="post" th:object="${quiz}">
+    <input type="hidden" th:field="*{id}">
+    <div class="row">
+        <div class="col-sm-6">
+            <div th:replace="~{fragments/imageUploader :: imageUploader}"></div>
+        </div>
+        <div class="col-sm-6">
+            <div class="md-3 p-2">
+                <label for="quizName" class="form-label" th:text="#{text.name}">Name</label>
+                <input type="text" class="form-control" id="quizName" th:field="*{name}" required autofocus>
+            </div>
+            <div class="md-3 p-2">
+                <label for="quizDescription" class="form-label" th:text="#{text.description}">Name</label>
+                <textarea type="text" class="form-control"
+                          id="quizDescription" th:field="*{description}"
+                          maxlength="255" rows="4"></textarea>
+            </div>
+            <div class="md-3 p-2">
+                <input type="checkbox" class="form-check-input" id="private" name="private" th:field="*{private}">
+                <label for="private" class="form-check-label" th:text="#{text.private}">Private</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <button type="submit" class="btn btn-dark" th:text="#{text.submit}"></button>
+        </div>
+    </div>
+</form>
+</body>
+</html>

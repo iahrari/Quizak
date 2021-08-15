@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'home', #{application.name}, ${user})}">
+
+<body>
+<div class="row">
+    <div class="col-md-10" style="margin-left: auto; margin-right: auto; margin-top: 20px">
+        <h1 class="header text-center" th:text="#{message.welcome}">Welcome to Quizak</h1>
+    </div>
+</div>
+
+</body>
+</html>

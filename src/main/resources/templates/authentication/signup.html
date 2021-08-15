@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{/authentication/fragment :: layout (~{::body}, #{message.signUp.title})}">
+
+<body>
+<form th:object="${user}" method="post" th:action="@{/signup}">
+    <div class="md-3 p-2">
+        <label for="userEmail" class="form-label" th:text="#{text.email}">Email Address</label>
+        <input type="email" class="form-control" id="userEmail" th:field="*{email}" required autofocus>
+    </div>
+    <div class="input-group md-3 p-2">
+        <label hidden="hidden" for="username"></label>
+        <span class="input-group-text" id="atSign">@</span>
+        <input type="text" class="form-control"
+               id="username" aria-describedby="atSign"
+               th:placeholder="#{text.username}"
+               th:field="*{uniqueName}" required>
+    </div>
+
+    <div class="md-3 p-2">
+        <label for="name" class="form-label" th:text="#{text.name}">Name</label>
+        <input type="text" class="form-control" id="name" th:field="*{name}" required>
+    </div>
+
+    <div class="md-3 p-2">
+        <label for="familyName" class="form-label" th:text="#{text.familyName}">Family Name</label>
+        <input type="text" class="form-control" id="familyName" th:field="*{familyName}" required>
+    </div>
+
+    <div class="md-3 p-2">
+        <label for="password" class="form-label" th:text="#{text.password}">Password</label>
+        <input type="password" class="form-control" id="password" th:field="*{password}" required>
+    </div>
+    <div class="md-3 p-2 row justify-content-center">
+        <div class="col-6 d-flex justify-content-end">
+            <button type="submit" class="btn btn-dark" th:text="#{text.submit}"></button>
+        </div>
+
+        <div class="col-6 d-flex justify-content-start">
+            <a th:href="@{/login}">
+                <button class="btn btn-primary" type="button" th:text="#{message.signIn.title}">
+                    Sign in
+                </button>
+            </a>
+        </div>
+    </div>
+</form>
+</body>
+</html>

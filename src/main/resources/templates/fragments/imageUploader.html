@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="imageUploader">
+    <input type="file" name="imageFile" id="imageFile" accept="image/*" class="file">
+    <div class="input-group my-3">
+        <input class="form-control" disabled th:placeholder="#{text.uploadImage}" id="file">
+        <button class="browse btn btn-primary" type="button" th:text="#{text.browse}">Browse</button>
+    </div>
+    <div class="ml-2 d-flex justify-content-center">
+        <img src="https://via.placeholder.com/150.png?text=Quizak.ir" alt="Image preview" id="preview" class="img-thumbnail">
+    </div>
+    <script th:src="@{/js/mediaUploader.js}"></script>
+</div>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(template, menu, title, user)">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Recipe Home</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+          crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/5.1.0/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/file.css}">
+</head>
+<body dir="auto">
+<script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="container-fluid d-flex">
+        <a class="navbar-brand" th:href="@{/}" th:text="#{application.name}">Quizak</a>
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapsibleNavbar"
+                aria-controls="collapsibleNavbar"
+                aria-expanded="false"
+                aria-label="Toggle Navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <div class="navbar-nav">
+                <a th:class="'nav-link ' + ${(menu == 'home')? 'disabled': ''}"
+                   th:text="#{navbar.home}"
+                   th:href="@{/}">Home</a>
+                <a th:class="'nav-link ' + ${(menu == 'newQuiz')? 'disabled': ''}"
+                   th:text="#{title.newQuiz}"
+                   th:href="@{/quiz/new}">New Quiz</a>
+                <a th:class="'nav-link ' + ${(menu == 'aboutUs')? 'disabled': ''}"
+                   th:text="#{navbar.aboutUs}"
+                   th:href="@{/}">About Us</a>
+            </div>
+            <div class="navbar-nav flex-grow-1 justify-content-end" th:if="${user == null}">
+                <a class="nav-link"
+                   th:text="#{message.signUp.title}"
+                   th:href="@{/signup}">Sign Up</a>
+                <a class="nav-link active"
+                   th:text="#{message.signIn.title}"
+                   th:href="@{/login}">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12" style="margin-left: auto; margin-right: auto; margin-top: 20px">
+            <th:block th:include="${template}"/>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"
+        th:src="@{/webjars/bootstrap/5.1.0/js/bootstrap.bundle.min.js}"></script>
+
+</body>
+</html>

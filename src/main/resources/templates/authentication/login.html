@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{/authentication/fragment :: layout (~{::body}, #{message.signIn.title})}">
+
+<body>
+<form method="post" th:action="@{/login}">
+    <div class="input-group md-3 p-2">
+        <label hidden="hidden" for="username"></label>
+        <span class="input-group-text" id="atSign">@</span>
+        <input type="text" class="form-control"
+               id="username" aria-describedby="atSign"
+               name="username"
+               th:placeholder="#{text.username}" required autofocus>
+    </div>
+
+    <div class="md-3 p-2">
+        <label for="password" class="form-label" th:text="#{text.password}">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+
+    <div class="md-3 p-2 justify-content-center">
+        <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
+        <label for="remember-me" class="form-check-label" th:text="#{text.rememberMe}">Remember Me!</label>
+    </div>
+
+    <div class="md-3 p-2 row justify-content-center">
+        <div class="col-6 d-flex justify-content-end">
+            <button type="submit" class="btn btn-dark" th:text="#{text.submit}"></button>
+        </div>
+
+        <div class="col-6 d-flex justify-content-start">
+            <a th:href="@{/signup}">
+                <button class="btn btn-primary" type="button" th:text="#{message.signUp.title}">
+                    Sign in
+                </button>
+            </a>
+        </div>
+    </div>
+</form>
+
+</body>
+</html>
