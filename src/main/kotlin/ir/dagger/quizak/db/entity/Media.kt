@@ -38,6 +38,8 @@ data class Media(
     @Enumerated(EnumType.STRING)
     val type: MediaType,
 
+    val extension: String
+
 ): BaseEntity(){
     @OneToMany(
         fetch = FetchType.LAZY,

@@ -3,11 +3,11 @@
       th:replace="~{fragments/cardLayout :: layout (~{::body},'newQuiz', #{title.newQuiz}, false, '', '', ${user})}">
 
 <body>
-<form th:action="@{/quiz/new}" method="post" th:object="${quiz}">
+<form th:action="@{/quiz/new}" method="post" th:object="${quiz}" enctype="multipart/form-data">
     <input type="hidden" th:field="*{id}">
     <div class="row">
         <div class="col-sm-6">
-            <div th:replace="~{fragments/imageUploader :: imageUploader}"></div>
+            <div th:replace="~{fragments/imageUploader :: imageUploader(quiz)}"></div>
         </div>
         <div class="col-sm-6">
             <div class="md-3 p-2">

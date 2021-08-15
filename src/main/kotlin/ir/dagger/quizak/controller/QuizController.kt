@@ -6,6 +6,7 @@ import ir.dagger.quizak.db.entity.customers.Institute
 import ir.dagger.quizak.db.entity.quiz.QuizType
 import ir.dagger.quizak.services.db.QuizService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.MediaType
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -49,12 +50,13 @@ class QuizController(
         return "quiz/addQuiz"
     }
 
-    @PostMapping("/new")
+    @PostMapping("/new", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun newQuiz(
         @ModelAttribute quiz: QuizCommand,
-        @AuthenticationPrincipal user: ApplicationUser
+        @AuthenticationPrincipal user: ApplicationUser,
+//        @RequestParam("imageFile") imageFile: MultipartFile?
     ): String {
-        val q = quizService.saveQuiz(quiz, user)
+        val q = quizService.saveQuiz(quiz, user, null)
         return "redirect:/quiz/${q.id}/show"
     }
 

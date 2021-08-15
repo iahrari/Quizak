@@ -4,13 +4,16 @@ import ir.dagger.quizak.auth.ApplicationUser
 import ir.dagger.quizak.controller.command.QuizCommand
 import ir.dagger.quizak.controller.command.converters.QuizCommandConverter
 import ir.dagger.quizak.controller.command.converters.QuizConverter
+import ir.dagger.quizak.db.entity.MediaType
 import ir.dagger.quizak.db.entity.quiz.Quiz
 import ir.dagger.quizak.db.repostiory.ClassRepository
 import ir.dagger.quizak.db.repostiory.QuizRepository
 import ir.dagger.quizak.db.repostiory.UserRepository
+import ir.dagger.quizak.services.FileService
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.multipart.MultipartFile
 import java.lang.RuntimeException
 import javax.transaction.Transactional
 
@@ -20,10 +23,14 @@ class QuizServiceImpl(
     private val classRepository: ClassRepository,
     private val userRepository: UserRepository,
     private val quizConverter: QuizConverter,
-    private val quizCommandConverter: QuizCommandConverter
+    private val quizCommandConverter: QuizCommandConverter,
+    private val fileService: FileService,
 ): QuizService {
     @Transactional
-    override fun saveQuiz(quizCommand: QuizCommand, user: ApplicationUser): QuizCommand {
+    override fun saveQuiz(
+        quizCommand: QuizCommand,
+        user: ApplicationUser,
+        imageFile: MultipartFile?): QuizCommand {
         quizCommand.createdById = user.id
         val quiz = if(quizCommand.id == null) quizConverter.convert(quizCommand)
                     else quizRepository.findById(quizCommand.id!!)
@@ -37,6 +44,10 @@ class QuizServiceImpl(
             //TODO: Add media
         }
 
+        quizCommand.imageFile?.let {
+            quiz.media = fileService.save(quizCommand.imageFile!!, MediaType.Picture)
+                .orElseThrow()
+        }
         return quizCommandConverter.convert(quizRepository.save(quiz!!))
     }
 

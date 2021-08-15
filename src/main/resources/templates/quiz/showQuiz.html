@@ -6,7 +6,7 @@
 
 <div class="row d-flex justify-content-center">
     <div class="col-sm-6" th:if="${quiz.media != null}">
-        <!--        TODO: Add Media here-->
+        <img th:src="@{/media/__${quiz.media.id}__}" alt="Quiz image" src="">
     </div>
     <div class="col-sm-6">
         <div class="row md-3 p-2">
