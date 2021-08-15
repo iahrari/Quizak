@@ -42,7 +42,6 @@ class QuizServiceImpl(
             quiz.name = quizCommand.name!!
             quiz.description = quizCommand.description!!
             quiz.isPrivate = quizCommand.private
-            //TODO: Add media
         }
 
         quizCommand.imageFile?.let {
