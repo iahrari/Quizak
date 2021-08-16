@@ -12,7 +12,8 @@ class ApplicationUser(
     private val isAccountNonLocked: Boolean,
     private val isCredentialsNonExpired: Boolean,
     private val isEnabled: Boolean,
-    private val grantedAuthorities: Set<GrantedAuthority> = hashSetOf()
+    private val grantedAuthorities: Set<GrantedAuthority> = hashSetOf(),
+    val mediaId: String? = null,
 ): UserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {

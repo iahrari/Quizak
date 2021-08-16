@@ -24,6 +24,7 @@ class ApplicationUserService(
             isAccountNonLocked = !user.isLocked,
             isCredentialsNonExpired = !user.isExpired,
             isEnabled = user.isEnabled,
+            mediaId = user.media?.id
         )
 
     }
