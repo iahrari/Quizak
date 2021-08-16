@@ -50,6 +50,6 @@ class QuizCommandConverter: Converter<Quiz, QuizCommand>{
             name = source.name
             description = source.description
             id = source.id
+            mediaId = source.media?.id
         }
-
 }

@@ -8,4 +8,5 @@ class QuizCommand: MainEntityCommand() {
     var instituteId: String? = null
     var createdById: String? = null
     var imageFile: MultipartFile? = null
+    var mediaId: String? = null
 }

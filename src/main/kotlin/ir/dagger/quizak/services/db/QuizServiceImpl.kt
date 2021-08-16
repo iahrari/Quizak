@@ -45,8 +45,9 @@ class QuizServiceImpl(
         }
 
         quizCommand.imageFile?.let {
-            quiz.media = fileService.save(quizCommand.imageFile!!, MediaType.Picture)
-                .orElseThrow()
+            if(!quizCommand.imageFile!!.isEmpty)
+                quiz.media = fileService.save(quizCommand.imageFile!!, MediaType.Picture)
+                    .orElseThrow()
         }
         return quizCommandConverter.convert(quizRepository.save(quiz!!))
     }
