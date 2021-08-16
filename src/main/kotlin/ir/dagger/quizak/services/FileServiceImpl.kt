@@ -35,26 +35,36 @@ class FileServiceImpl(
         val message = MessageDigest.getInstance("SHA-256")
         val array = message.digest(file.bytes)
         val digest = array.fold("") { str, it -> str + "%02x".format(it) }
-        val media = Media(
-            folder1 = digest.substring(0, 2),
-            folder2 = digest.substring(2, 4),
-            fileName = digest.substring(4),
-            type = MediaType.Picture,
-            extension = Optional.ofNullable(type.name).filter { it.contains(".") }
-                .map { it.substring(it.lastIndexOf(".")) }.orElse("")
-        )
 
-        var destinationFile = rootLocation
-            .resolve("${media.folder1}/${media.folder2}")
-            .normalize().toAbsolutePath()
+        val folder1 = digest.substring(0, 2)
+        val folder2 = digest.substring(2, 4)
+        val fileName = digest.substring(4)
 
-        Files.createDirectories(destinationFile)
-        destinationFile = destinationFile.resolve(media.fileName)
-            .normalize().toAbsolutePath()
+        val m = mediaRepository.findByFolder1AndFolder2AndFileName(
+            folder1, folder2, fileName
+        ).or {
+            var media = Media(
+                folder1 = folder1,
+                folder2 = folder2,
+                fileName = fileName,
+                type = MediaType.Picture,
+                extension = Optional.ofNullable(type.name).filter { it.contains(".") }
+                    .map { it.substring(it.lastIndexOf(".")) }.orElse("")
+            )
+            media = mediaRepository.save(media)
+            var destinationFile = rootLocation
+                .resolve("${media.folder1}/${media.folder2}")
+                .normalize().toAbsolutePath()
 
-        Files.copy(file.inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING)
+            Files.createDirectories(destinationFile)
+            destinationFile = destinationFile.resolve(media.fileName)
+                .normalize().toAbsolutePath()
 
-        return Optional.ofNullable(mediaRepository.save(media))
+            Files.copy(file.inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING)
+            Optional.of(media)
+        }
+
+        return m
     }
 
     override fun getMediaOutputStream(media: Media): InputStream {
