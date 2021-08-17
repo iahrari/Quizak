@@ -1,12 +1,15 @@
 package ir.dagger.quizak.services.db
 
 import ir.dagger.quizak.auth.ApplicationUser
+import ir.dagger.quizak.controller.command.QuizCommand
 import ir.dagger.quizak.controller.command.UserCommand
+import ir.dagger.quizak.controller.command.converters.QuizCommandConverter
 import ir.dagger.quizak.controller.command.converters.UserCommandConverter
 import ir.dagger.quizak.controller.command.converters.UserConverter
 import ir.dagger.quizak.db.entity.MediaType
 import ir.dagger.quizak.db.entity.customers.EmailVerification
 import ir.dagger.quizak.db.entity.customers.User
+import ir.dagger.quizak.db.entity.quiz.Quiz
 import ir.dagger.quizak.db.repostiory.EmailVerificationRepository
 import ir.dagger.quizak.db.repostiory.UserRepository
 import ir.dagger.quizak.services.FileService
@@ -23,12 +26,13 @@ import java.time.LocalDateTime
 class UserServiceImpl(
     private val passwordEncoder: PasswordEncoder,
     private val userRepository: UserRepository,
+    private val quizCommandConverter: QuizCommandConverter,
     private val emailVerificationRepository: EmailVerificationRepository,
     private val userCommandConverter: UserCommandConverter,
     private val userConverter: UserConverter,
     private val emailService: EmailService,
     private val fileService: FileService,
-): UserService {
+) : UserService {
 
     @Transactional
     override fun createUser(userCommand: UserCommand): UserCommand {
@@ -57,14 +61,15 @@ class UserServiceImpl(
     @Transactional
     override fun updateUser(
         userCommand: UserCommand,
-        user: ApplicationUser
+        user: ApplicationUser,
     ): User {
         val oldUser = userRepository.findById(userCommand.id!!)
-        if(userCommand.id != null && userCommand.id == user.id && !oldUser.isEmpty){
+        if (userCommand.id != null && userCommand.id == user.id && !oldUser.isEmpty) {
             oldUser.get().apply {
                 userCommand.imageFile?.let {
                     if (!it.isEmpty)
-                        oldUser.get().media = fileService.save(userCommand.imageFile!!, MediaType.Picture)
+                        oldUser.get().media =
+                            fileService.save(userCommand.imageFile!!, MediaType.Picture)
                             .orElseThrow()
                 }
 
@@ -77,6 +82,11 @@ class UserServiceImpl(
             return userRepository.save(oldUser.get())
         } else throw HttpClientErrorException(HttpStatus.UNAUTHORIZED)
     }
+
+    override fun myCreations(user: ApplicationUser): List<QuizCommand> =
+        userRepository.findById(user.id).orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND) }
+            .getCreatedBy().asSequence().sortedByDescending(Quiz::createdAt)
+            .map(quizCommandConverter::convert).toList()
 
     override fun findUserByUniqueName(uniqueName: String): UserCommand {
         val user = userRepository.findByUniqueName(uniqueName).orElseThrow()
@@ -94,7 +104,7 @@ class UserServiceImpl(
         val emailVerification = emailVerificationRepository.findById(id).orElseThrow()
         val user = userRepository.findByEmail(emailVerification.email).orElseThrow()
         val duration = Duration.between(emailVerification.createdAt, LocalDateTime.now()).toHours()
-        if(duration >= 24) {
+        if (duration >= 24) {
             //TODO: Add exception
             userRepository.delete(user)
         } else {

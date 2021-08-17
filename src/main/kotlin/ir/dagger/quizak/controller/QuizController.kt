@@ -32,6 +32,15 @@ class QuizController(
         return "quiz/showQuiz"
     }
 
+    @GetMapping("/{quizId}/delete")
+    fun deleteQuiz(
+        @PathVariable quizId: String,
+        @AuthenticationPrincipal user: ApplicationUser,
+    ): String {
+        quizService.deleteById(quizId, user)
+        return "redirect:/user/profile/myCreations"
+    }
+
     @GetMapping("/{quizId}/edit")
     fun updateQuiz(
         model: Model,

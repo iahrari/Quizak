@@ -8,4 +8,5 @@ interface QuizService {
     fun saveQuiz(quizCommand: QuizCommand, user: ApplicationUser): QuizCommand
     fun findQuizCommandById(id: String, user: ApplicationUser): QuizCommand
     fun findQuizById(id: String, user: ApplicationUser): Quiz
+    fun deleteById(id: String, user: ApplicationUser)
 }

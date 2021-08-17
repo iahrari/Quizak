@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{user/menu :: layout (~{::body}, ${user}, ${userCommand}, ${menu})}">
+      th:replace="~{user/menu :: layout (~{::body}, ${user}, ${userCommand}, 'profile', #{text.profile})}">
 <body>
-
-<!--                TODO: Add phone support-->
-<!--                TODO: Add bornAt support-->
+<!--TODO: Add phone support-->
+<!--TODO: Add bornAt support-->
 <form th:object="${userCommand}" method="post" th:action="@{/user/profile/update}" enctype="multipart/form-data">
     <input type="hidden" th:field="*{id}">
     <div class="row">
@@ -12,7 +11,7 @@
             <div th:replace="~{fragments/imageUploader :: imageUploader(${mainEntity})}"></div>
         </div>
         <div class="col-sm-6">
-            <!--                            Username field-->
+            <!--Username field-->
             <div class="input-group md-3 p-2">
                 <label hidden="hidden" for="username"></label>
                 <span class="input-group-text" id="atSign">@</span>
@@ -21,12 +20,12 @@
                        th:placeholder="#{text.username}"
                        th:field="*{uniqueName}" required>
             </div>
-            <!--                            Name field-->
+            <!--Name field-->
             <div class="md-3 p-2">
                 <label for="name" class="form-label" th:text="#{text.name}">Name</label>
                 <input type="text" class="form-control" id="name" th:field="*{name}" required>
             </div>
-            <!--                            Family name field-->
+            <!--Family name field-->
             <div class="md-3 p-2">
                 <label for="familyName" class="form-label" th:text="#{text.familyName}">Family Name</label>
                 <input type="text" class="form-control" id="familyName" th:field="*{familyName}" required>

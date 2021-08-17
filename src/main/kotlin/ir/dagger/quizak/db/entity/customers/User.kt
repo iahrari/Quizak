@@ -108,11 +108,6 @@ class User(
         mappedBy = "createdBy"
     )
     private val createdByMe: MutableSet<Quiz> = hashSetOf()
-    fun addQuiz(q: Quiz){
-        q.createdBy = this
-        createdByMe.add(q)
-    }
-
     fun getCreatedBy(): Set<Quiz> = createdByMe
 
     override fun toString(): String {

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{user/menu :: layout (~{::body}, ${user}, ${userCommand}, 'myCreations', #{text.myCreations})}">
+<body>
+<ol class="list-group list-group-numbered">
+    <li class="list-group-item d-flex justify-content-between align-items-start" th:each="quiz: ${myCreations}">
+        <div class="ms-2 me-auto">
+            <div class="fw-bold" th:text="${quiz.name}"></div>
+            <div th:text="${quiz.description}"></div>
+        </div>
+        <div>
+            <a class="btn btn-outline-dark" th:href="@{/quiz/__${quiz.id}__/show}"
+               th:text="#{text.view}"></a>
+            <button class="btn btn-outline-danger text-danger m-md-0 mt-2"
+                    th:attr="onclick=|deleteFunction('#{text.doYouWantToDelete(${quiz.name})}', '${quiz.id}')|"
+                    th:href="@{/quiz/__${quiz.id}__/show}" th:text="#{text.delete}"></button>
+        </div>
+    </li>
+</ol>
+<script>
+    function deleteFunction(name, id){
+        const r = confirm(name);
+        if(r){
+            window.open("/quiz/" + id + "/delete", "_self");
+        }
+    }
+</script>
+</body>
+</html>

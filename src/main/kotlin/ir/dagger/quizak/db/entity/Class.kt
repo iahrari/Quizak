@@ -73,9 +73,9 @@ class Class(
 
     @OneToMany(
         mappedBy = "classId",
-        cascade = [CascadeType.ALL],
+        cascade = [CascadeType.REMOVE],
         orphanRemoval = true,
-        fetch = FetchType.EAGER
+        fetch = FetchType.LAZY
     )
     private val classQuizList: MutableSet<Quiz> = hashSetOf()
     fun addQuiz(q: Quiz){

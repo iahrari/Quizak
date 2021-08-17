@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:fragment="layout(cardTemplate, userT, userCommand, menu)"
+      th:fragment="layout(cardTemplate, userT, userCommand, navTitle, menuTitle)"
       th:replace="~{fragments/layout :: layout (~{::body},'profile', #{text.userProfile(${userCommand.name})}, ${userT})}">
 <body>
 <div class="row">
-    <nav class="col-md-2 nav flex-column">
+    <nav class="col-md-2 p-md-2 nav flex-column">
         <!--        Menu-->
-        <a th:class="'nav-link ' + ${(menu == 'profile')? 'disabled': ''}"
+        <a th:class="'nav-link ' + ${(navTitle == 'profile')? 'disabled': ''}"
+           th:href="@{/user/profile}"
            th:text="#{text.profile}"></a>
+        <a th:class="'nav-link ' + ${(navTitle == 'myCreations')? 'disabled': ''}"
+           th:href="@{/user/profile/myCreations}"
+           th:text="#{text.myCreations}"></a>
+        <a th:class="'nav-link ' + ${(navTitle == 'history')? 'disabled': ''}"
+           th:href="@{/user/profile/history}"
+           th:text="#{text.history}"></a>
     </nav>
     <div class="col-md-10">
         <div class="card" style="width: 100%; height: 100%;">
-            <div class="card-header bg-dark">
+            <div class="card-header">
                 <div class="row">
-                    <h2 class="card-title text-white" th:text="#{text.profile}">Title</h2>
+                    <h2 class="card-title" th:text="${menuTitle}">Title</h2>
                 </div>
             </div>
 

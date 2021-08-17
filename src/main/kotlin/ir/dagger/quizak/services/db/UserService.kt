@@ -1,6 +1,7 @@
 package ir.dagger.quizak.services.db
 
 import ir.dagger.quizak.auth.ApplicationUser
+import ir.dagger.quizak.controller.command.QuizCommand
 import ir.dagger.quizak.controller.command.UserCommand
 import ir.dagger.quizak.db.entity.customers.User
 
@@ -13,4 +14,5 @@ interface UserService {
         userCommand: UserCommand,
         user: ApplicationUser
     ): User
+    fun myCreations(user: ApplicationUser): List<QuizCommand>
 }

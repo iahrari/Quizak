@@ -16,21 +16,32 @@ class UserController(
 ) {
     @GetMapping("/profile")
     fun showProfile(
-        @RequestParam("menu") menu: String?,
         @AuthenticationPrincipal user: ApplicationUser,
         model: Model,
     ): String {
         val userCommand = userService.findUserById(user.id)
-        model.addAttribute("menu", menu ?: "profile")
-        model.addAttribute("userCommand", userCommand)
         model.addAttribute("mainEntity", userCommand as MainEntityCommand)
+        model.addAttribute("userCommand", userCommand)
         model.addAttribute("user", user)
         return "user/profile"
     }
 
+    @GetMapping("/profile/myCreations")
+    fun showMyCreations(
+        @AuthenticationPrincipal user: ApplicationUser,
+        model: Model,
+    ): String {
+        val userCommand = userService.findUserById(user.id)
+
+        model.addAttribute("myCreations", userService.myCreations(user))
+        model.addAttribute("userCommand", userCommand)
+        model.addAttribute("user", user)
+
+        return "user/myCreations"
+    }
+
     @PostMapping("/profile/update")
     fun updateProfile(
-        @RequestParam("menu") menu: String?,
         @ModelAttribute userCommand: UserCommand,
         @AuthenticationPrincipal user: ApplicationUser,
     ): String {
@@ -39,6 +50,6 @@ class UserController(
             username = updatedUser.uniqueName
             mediaId = updatedUser.media?.id
         }
-        return "redirect:/user/profile?menu=profile"
+        return "redirect:/user/profile"
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(template, menu, title, user)">
+<html lang="" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(template, menu, title, user)">
 <head>
     <meta charset="UTF-8">
     <title th:text="${title}">Title</title>
@@ -56,7 +56,8 @@
                     <div>
                         <img th:if="${user.mediaId != null}"
                              th:src="@{/media/__${user.mediaId}__}"
-                             class="rounded-circle border border-2" width="25" height="25">
+                             class="rounded-circle border border-2" width="25" height="25"
+                             alt="User profile image" src="https://via.placeholder.com/255.png?text=Quizak.ir">
 
                         <b th:unless="${user.mediaId != null}"
                            class="rounded-circle text-center border border-2  text-light bg-dark px-3 py-2"

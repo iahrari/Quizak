@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/cardLayout :: layout (~{::body},'newQuiz', ${quiz.name}, true, #{text.edit}, @{/quiz/__${quiz.id}__/edit}, ${user})}">
+      th:replace="~{fragments/cardLayout :: layout (~{::body},'newQuiz', ${quiz.name}, ${quiz.createdBy.id == user.id}, #{text.edit}, @{/quiz/__${quiz.id}__/edit}, ${user})}">
 
 <body>
 

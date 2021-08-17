@@ -68,4 +68,12 @@ class QuizServiceImpl(
         else throw HttpClientErrorException(HttpStatus.FORBIDDEN)
     }
 
+    @Transactional
+    override fun deleteById(id: String, user: ApplicationUser) {
+        val q = quizRepository.findById(id).orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND) }
+        if(q.createdBy.id == user.id)
+            quizRepository.deleteById(id)
+        else throw HttpClientErrorException(HttpStatus.FORBIDDEN)
+    }
+
 }
