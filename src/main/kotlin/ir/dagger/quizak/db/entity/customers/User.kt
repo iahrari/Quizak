@@ -26,7 +26,7 @@ class User(
     @Column(name = "born_at")
     var bornAt: LocalDate?,
 
-    uniqueName: String, hash: String, phone: String?,
+    uniqueName: String, phone: String?,
 
     email: String?, name: String,
 
@@ -44,7 +44,7 @@ class User(
     )
     var isTeacher: Boolean = false,
     isLocked: Boolean = false,
-): BaseCustomer(uniqueName, hash, phone, email, name, description, isLocked, media){
+): BaseCustomer(uniqueName, phone, email, name, description, isLocked, media){
 
     @OneToMany(
         mappedBy = "user",

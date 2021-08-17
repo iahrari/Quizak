@@ -3,13 +3,10 @@ package ir.dagger.quizak.controller.command.converters
 import ir.dagger.quizak.controller.command.UserCommand
 import ir.dagger.quizak.db.entity.customers.User
 import org.springframework.core.convert.converter.Converter
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 
 @Component
-class UserConverter(
-    private val passwordEncoder: PasswordEncoder,
-) : Converter<UserCommand, User> {
+class UserConverter: Converter<UserCommand, User> {
     @Synchronized
     override fun convert(source: UserCommand): User? =
         if (source.phone == null && source.email == null) null
@@ -19,13 +16,14 @@ class UserConverter(
             verifiedTeacher = source.verifiedTeacher,
             isTeacher = source.isTeacher,
             uniqueName = source.uniqueName!!,
-            hash = passwordEncoder.encode(source.password),
             phone = source.phone,
             email = source.email,
             name = source.name!!,
+            description = source.description
         ).apply {
             isExpired = source.isExpired
             isEnabled = source.isEnabled
+            id = source.id
         }
 }
 
@@ -47,6 +45,6 @@ class UserCommandConverter: Converter<User, UserCommand> {
                 email = source.email
                 isEnabled = source.isEnabled
                 isExpired = source.isExpired
-
+                mediaId = source.media?.id
             }
 }

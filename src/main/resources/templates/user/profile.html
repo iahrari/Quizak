@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{user/menu :: layout (~{::body}, ${user}, ${userCommand}, ${menu})}">
+<body>
+
+<!--                TODO: Add phone support-->
+<!--                TODO: Add bornAt support-->
+<form th:object="${userCommand}" method="post" th:action="@{/user/profile/update}" enctype="multipart/form-data">
+    <input type="hidden" th:field="*{id}">
+    <div class="row">
+        <div class="col-sm-6">
+            <div th:replace="~{fragments/imageUploader :: imageUploader(${mainEntity})}"></div>
+        </div>
+        <div class="col-sm-6">
+            <!--                            Username field-->
+            <div class="input-group md-3 p-2">
+                <label hidden="hidden" for="username"></label>
+                <span class="input-group-text" id="atSign">@</span>
+                <input type="text" class="form-control"
+                       id="username" aria-describedby="atSign"
+                       th:placeholder="#{text.username}"
+                       th:field="*{uniqueName}" required>
+            </div>
+            <!--                            Name field-->
+            <div class="md-3 p-2">
+                <label for="name" class="form-label" th:text="#{text.name}">Name</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+            </div>
+            <!--                            Family name field-->
+            <div class="md-3 p-2">
+                <label for="familyName" class="form-label" th:text="#{text.familyName}">Family Name</label>
+                <input type="text" class="form-control" id="familyName" th:field="*{familyName}" required>
+            </div>
+        </div>
+    </div>
+
+    <div class="md-3 p-2">
+        <label for="userEmail" class="form-label" th:text="#{text.email}">Email Address</label>
+        <input type="email" class="form-control" id="userEmail" th:field="*{email}" required disabled autofocus>
+    </div>
+
+    <div class="md-3 p-2">
+        <label for="quizDescription" class="form-label" th:text="#{text.description}">Name</label>
+        <textarea type="text" class="form-control"
+                  id="quizDescription" th:field="*{description}"
+                  maxlength="255" rows="4"></textarea>
+    </div>
+
+    <div class="md-3 p-2 row justify-content-center">
+        <div class="col-12 d-flex justify-content-center">
+            <button type="submit" class="btn btn-dark" th:text="#{text.submit}"></button>
+        </div>
+    </div>
+</form>
+</body>
+</html>

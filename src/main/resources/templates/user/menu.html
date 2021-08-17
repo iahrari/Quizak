@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(cardTemplate, userT, userCommand, menu)"
+      th:replace="~{fragments/layout :: layout (~{::body},'profile', #{text.userProfile(${userCommand.name})}, ${userT})}">
+<body>
+<div class="row">
+    <nav class="col-md-2 nav flex-column">
+        <!--        Menu-->
+        <a th:class="'nav-link ' + ${(menu == 'profile')? 'disabled': ''}"
+           th:text="#{text.profile}"></a>
+    </nav>
+    <div class="col-md-10">
+        <div class="card" style="width: 100%; height: 100%;">
+            <div class="card-header bg-dark">
+                <div class="row">
+                    <h2 class="card-title text-white" th:text="#{text.profile}">Title</h2>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <th:block th:include="${cardTemplate}"/>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

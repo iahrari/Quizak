@@ -1,6 +1,7 @@
 package ir.dagger.quizak.controller
 
 import ir.dagger.quizak.auth.ApplicationUser
+import ir.dagger.quizak.controller.command.MainEntityCommand
 import ir.dagger.quizak.controller.command.QuizCommand
 import ir.dagger.quizak.db.entity.customers.Institute
 import ir.dagger.quizak.db.entity.quiz.QuizType
@@ -39,13 +40,16 @@ class QuizController(
     ): String {
         val quiz = quizService.findQuizCommandById(quizId, user)
         model.addAttribute("quiz", quiz)
+        model.addAttribute("mainEntity", quiz as MainEntityCommand)
         model.addAttribute("user", user)
         return "quiz/addQuiz"
     }
 
     @GetMapping("/new")
     fun newQuizPage(model: Model, @AuthenticationPrincipal user: ApplicationUser): String {
-        model.addAttribute("quiz", QuizCommand())
+        val quiz = QuizCommand()
+        model.addAttribute("quiz", quiz)
+        model.addAttribute("mainEntity", quiz as MainEntityCommand)
         model.addAttribute("user", user)
         return "quiz/addQuiz"
     }
@@ -54,9 +58,8 @@ class QuizController(
     fun newQuiz(
         @ModelAttribute quiz: QuizCommand,
         @AuthenticationPrincipal user: ApplicationUser,
-//        @RequestParam("imageFile") imageFile: MultipartFile?
     ): String {
-        val q = quizService.saveQuiz(quiz, user, null)
+        val q = quizService.saveQuiz(quiz, user)
         return "redirect:/quiz/${q.id}/show"
     }
 

@@ -28,10 +28,10 @@ import javax.persistence.*
 class Institute(
     @Embedded
     val address: Address,
-    uniqueName: String, salt: String, phone: String, email: String?, name: String,
+    uniqueName: String, phone: String, email: String?, name: String,
     description: String? = null, media: Media? = null,
     isLocked: Boolean = false,
-    ): BaseCustomer(uniqueName, salt, phone, email, name, description, isLocked, media){
+    ): BaseCustomer(uniqueName, phone, email, name, description, isLocked, media){
     /**
      * List of teachers that are hired for this institution.
      */

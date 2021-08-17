@@ -15,14 +15,7 @@ open class BaseCustomer(
         nullable = false
     )
     var uniqueName: String,
-    @JsonIgnore
-    @Column(
-        name = "hash",
-        columnDefinition = "BINARY(60)",
-        length = 60,
-        nullable = false,
-    )
-    var hash: String,
+
     @Column(
         length = 12,
         unique = true,
@@ -44,6 +37,15 @@ open class BaseCustomer(
 ) : MainEntity(name, description, media){
     var isEnabled: Boolean = false
     var isExpired: Boolean = false
+
+    @JsonIgnore
+    @Column(
+        name = "hash",
+        columnDefinition = "BINARY(60)",
+        length = 60,
+        nullable = false,
+    )
+    lateinit var hash: String
 
     override fun toString(): String {
         return "BaseCustomer(uniqueName='$uniqueName', hash='${hash.replace(0.toChar().toString(), "")}', phone=$phone, email=$email, ${super.toString()}"

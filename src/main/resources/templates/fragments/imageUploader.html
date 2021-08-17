@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<!--/*@thymesVar id="quiz" type="ir.dagger.quizak.controller.command.QuizCommand"*/-->
-<div th:fragment="imageUploader(quiz)">
-    <input type="file" name="imageFile" id="imageFile" th:field="${quiz.imageFile}"
+<!--/*@thymesVar id="mainEntity" type="ir.dagger.quizak.controller.command.MainEntityCommand*/-->
+<div th:fragment="imageUploader(mainEntity)">
+    <input type="file" name="imageFile" id="imageFile" th:field="${mainEntity.imageFile}"
            accept="image/*" class="file" multiple="multiple">
     <div class="input-group my-3">
+<!--        TODO: change this button to an overflow button on the image preview-->
         <input class="form-control" disabled th:placeholder="#{text.uploadImage}" id="file">
         <button class="browse btn btn-primary" type="button" th:text="#{text.browse}">Browse</button>
     </div>
     <div class="ml-2 d-flex justify-content-center">
         <img
-                th:src="(${quiz.mediaId} != null)? '/media/' + ${quiz.mediaId}: 'https://via.placeholder.com/150.png?text=Quizak.ir'"
+                th:src="(${mainEntity.mediaId} != null)? '/media/' + ${mainEntity.mediaId}: 'https://via.placeholder.com/150.png?text=Quizak.ir'"
                 alt="Image preview" id="preview" class="img-thumbnail">
     </div>
     <script th:src="@{/js/mediaUploader.js}"></script>

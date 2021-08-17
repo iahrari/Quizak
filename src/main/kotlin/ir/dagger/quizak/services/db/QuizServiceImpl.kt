@@ -30,8 +30,8 @@ class QuizServiceImpl(
     @Transactional
     override fun saveQuiz(
         quizCommand: QuizCommand,
-        user: ApplicationUser,
-        imageFile: MultipartFile?): QuizCommand {
+        user: ApplicationUser
+    ): QuizCommand {
         quizCommand.createdById = user.id
         val quiz = if(quizCommand.id == null) quizConverter.convert(quizCommand)
                     else quizRepository.findById(quizCommand.id!!)

@@ -6,14 +6,14 @@ import org.springframework.security.core.userdetails.UserDetails
 //TODO: Configure grantedAuthorities
 class ApplicationUser(
     val id: String,
-    private val username: String,
-    private val password: String,
+    private var username: String,
+    private var password: String,
     private val isAccountNonExpired: Boolean,
     private val isAccountNonLocked: Boolean,
     private val isCredentialsNonExpired: Boolean,
     private val isEnabled: Boolean,
     private val grantedAuthorities: Set<GrantedAuthority> = hashSetOf(),
-    val mediaId: String? = null,
+    var mediaId: String? = null,
 ): UserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
@@ -42,5 +42,13 @@ class ApplicationUser(
 
     override fun isEnabled(): Boolean {
         return isEnabled
+    }
+
+    fun setUsername(username: String) {
+        this.username = username
+    }
+
+    fun setPassword(password: String) {
+        this.password = password
     }
 }
