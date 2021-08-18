@@ -12,14 +12,14 @@ class MultiChoiceQ(
     question: String,
     answerTime: Long,
 
-    val opt1: String,
-    val opt2: String,
-    val opt3: String?,
-    val opt4: String?,
+    var opt1: String,
+    var opt2: String,
+    var opt3: String?,
+    var opt4: String?,
 
-    val isAnswer1: Boolean,
-    val isAnswer2: Boolean,
-    val isAnswer3: Boolean?,
-    val isAnswer4: Boolean?,
+    var isAnswer1: Boolean,
+    var isAnswer2: Boolean,
+    var isAnswer3: Boolean?,
+    var isAnswer4: Boolean?,
 ) : BaseQuestion(question, answerTime, QuizType.MultiChoice) {
 }

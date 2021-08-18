@@ -9,8 +9,8 @@ import javax.persistence.*
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 abstract class BaseQuestion(
-    val question: String,
-    val answerTime: Long,
+    var question: String,
+    var answerTime: Long,
 
     @Enumerated(EnumType.ORDINAL)
     val type: QuizType,
@@ -28,7 +28,7 @@ abstract class BaseQuestion(
         name = "picture",
         referencedColumnName = "id"
     )
-    val media: Media? = null
+    var media: Media? = null
 }
 
 @Embeddable

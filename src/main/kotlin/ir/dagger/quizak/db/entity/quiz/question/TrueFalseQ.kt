@@ -11,5 +11,5 @@ import javax.persistence.Entity
 class TrueFalseQ(
     question: String,
     answerTime: Long,
-    val isTrue: Boolean,
+    var isTrue: Boolean,
 ): BaseQuestion(question, answerTime, QuizType.TrueFalse)

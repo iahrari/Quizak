@@ -13,7 +13,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "user")
 @AttributeOverrides(
-    AttributeOverride(name = "phone", column = Column(nullable = true, length = 12, unique = true,)),
+    AttributeOverride(name = "phone", column = Column(nullable = true, length = 12, unique = true)),
     AttributeOverride(name = "email", column = Column(nullable = true, unique = true))
 )
 class User(
