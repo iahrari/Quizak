@@ -45,6 +45,6 @@ class UserCommandConverter: Converter<User, UserCommand> {
                 email = source.email
                 isEnabled = source.isEnabled
                 isExpired = source.isExpired
-                mediaId = source.media?.id
+                mediaData.mediaId = source.media?.id
             }
 }

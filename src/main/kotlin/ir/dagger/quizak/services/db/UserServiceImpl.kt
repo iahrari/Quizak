@@ -66,10 +66,10 @@ class UserServiceImpl(
         val oldUser = userRepository.findById(userCommand.id!!)
         if (userCommand.id != null && userCommand.id == user.id && !oldUser.isEmpty) {
             oldUser.get().apply {
-                userCommand.imageFile?.let {
+                userCommand.mediaData.file?.let {
                     if (!it.isEmpty)
                         oldUser.get().media =
-                            fileService.save(userCommand.imageFile!!, MediaType.Picture)
+                            fileService.save(it, MediaType.Picture)
                             .orElseThrow()
                 }
 

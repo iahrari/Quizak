@@ -2,6 +2,7 @@ package ir.dagger.quizak.controller
 
 import ir.dagger.quizak.auth.ApplicationUser
 import ir.dagger.quizak.controller.command.MainEntityCommand
+import ir.dagger.quizak.controller.command.MediaData
 import ir.dagger.quizak.controller.command.UserCommand
 import ir.dagger.quizak.services.db.UserService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -20,7 +21,7 @@ class UserController(
         model: Model,
     ): String {
         val userCommand = userService.findUserById(user.id)
-        model.addAttribute("mainEntity", userCommand as MainEntityCommand)
+        model.addAttribute("media", userCommand.mediaData)
         model.addAttribute("userCommand", userCommand)
         model.addAttribute("user", user)
         return "user/profile"
@@ -43,9 +44,11 @@ class UserController(
     @PostMapping("/profile/update")
     fun updateProfile(
         @ModelAttribute userCommand: UserCommand,
+        @ModelAttribute mediaData: MediaData,
         @AuthenticationPrincipal user: ApplicationUser,
     ): String {
-        val updatedUser = userService.updateUser(userCommand, user)
+        val updatedUser = userService.updateUser(userCommand.apply {
+            this.mediaData = mediaData }, user)
         user.apply {
             username = updatedUser.uniqueName
             mediaId = updatedUser.media?.id

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<!--/*@thymesVar id="mainEntity" type="ir.dagger.quizak.controller.command.MainEntityCommand*/-->
-<div th:fragment="imageUploader(mainEntity)">
-    <input type="file" name="imageFile" id="imageFile" th:field="${mainEntity.imageFile}"
+<!--/*@thymesVar id="media" type="ir.dagger.quizak.controller.command.MediaData*/-->
+<div th:fragment="imageUploader(media)">
+    <input type="file" id="imageFile" th:field="${media.file}"
            accept="image/*" class="file" multiple="multiple">
     <div class="input-group my-3">
 <!--        TODO: change this button to an overflow button on the image preview-->
@@ -12,7 +12,7 @@
     </div>
     <div class="ml-2 d-flex justify-content-center">
         <img
-                th:src="(${mainEntity.mediaId} != null)? '/media/' + ${mainEntity.mediaId}: 'https://via.placeholder.com/150.png?text=Quizak.ir'"
+                th:src="(${media.mediaId} != null)? '/media/' + ${media.mediaId}: 'https://via.placeholder.com/150.png?text=Quizak.ir'"
                 alt="Image preview" id="preview" class="img-thumbnail" src="https://via.placeholder.com/150.png?text=Quizak.ir">
     </div>
     <script th:src="@{/js/mediaUploader.js}"></script>

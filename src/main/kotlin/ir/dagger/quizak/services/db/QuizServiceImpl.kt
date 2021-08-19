@@ -13,8 +13,6 @@ import ir.dagger.quizak.services.FileService
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.multipart.MultipartFile
-import java.lang.RuntimeException
 import javax.transaction.Transactional
 
 @Service
@@ -44,9 +42,9 @@ class QuizServiceImpl(
             quiz.isPrivate = quizCommand.private
         }
 
-        quizCommand.imageFile?.let {
-            if(!quizCommand.imageFile!!.isEmpty)
-                quiz.media = fileService.save(quizCommand.imageFile!!, MediaType.Picture)
+        quizCommand.mediaData.file?.let {
+            if(!it.isEmpty)
+                quiz.media = fileService.save(it, MediaType.Picture)
                     .orElseThrow()
         }
         return quizCommandConverter.convert(quizRepository.save(quiz!!))

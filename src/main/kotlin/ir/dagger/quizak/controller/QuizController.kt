@@ -2,6 +2,7 @@ package ir.dagger.quizak.controller
 
 import ir.dagger.quizak.auth.ApplicationUser
 import ir.dagger.quizak.controller.command.MainEntityCommand
+import ir.dagger.quizak.controller.command.MediaData
 import ir.dagger.quizak.controller.command.QuizCommand
 import ir.dagger.quizak.db.entity.customers.Institute
 import ir.dagger.quizak.db.entity.quiz.QuizType
@@ -49,7 +50,7 @@ class QuizController(
     ): String {
         val quiz = quizService.findQuizCommandById(quizId, user)
         model.addAttribute("quiz", quiz)
-        model.addAttribute("mainEntity", quiz as MainEntityCommand)
+        model.addAttribute("media", quiz.mediaData)
         model.addAttribute("user", user)
         return "quiz/addQuiz"
     }
@@ -58,7 +59,7 @@ class QuizController(
     fun newQuizPage(model: Model, @AuthenticationPrincipal user: ApplicationUser): String {
         val quiz = QuizCommand()
         model.addAttribute("quiz", quiz)
-        model.addAttribute("mainEntity", quiz as MainEntityCommand)
+        model.addAttribute("media", quiz.mediaData)
         model.addAttribute("user", user)
         return "quiz/addQuiz"
     }
@@ -66,9 +67,10 @@ class QuizController(
     @PostMapping("/new", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun newQuiz(
         @ModelAttribute quiz: QuizCommand,
+        @ModelAttribute mediaData: MediaData,
         @AuthenticationPrincipal user: ApplicationUser,
     ): String {
-        val q = quizService.saveQuiz(quiz, user)
+        val q = quizService.saveQuiz(quiz.apply{ this.mediaData = mediaData }, user)
         return "redirect:/quiz/${q.id}/show"
     }
 

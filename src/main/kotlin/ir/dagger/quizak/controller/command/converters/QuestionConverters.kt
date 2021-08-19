@@ -13,7 +13,7 @@ fun copyBaseQuestionToCommand(question: BaseQuestionCommand, source: BaseQuestio
     return question.apply {
         rowId = source.id.row
         quizId = source.id.quizId
-        mediaId = source.media?.id
+        mediaData.mediaId = source.media?.id
         type = source.type
         this.question = source.question
         answerTime = source.answerTime / 1000
