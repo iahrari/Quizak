@@ -17,7 +17,7 @@ class QuizConverter(
     private val instituteRepository: InstituteRepository,
     private val defaultClass: Class,
     private val defaultInstitute: Institute
-): Converter<QuizCommand, Quiz> {
+): KConverter<QuizCommand, Quiz> {
 
     //TODO: Add exception handling
     //TODO: Add media conversion
@@ -38,7 +38,7 @@ class QuizConverter(
 }
 
 @Component
-class QuizCommandConverter: Converter<Quiz, QuizCommand>{
+class QuizCommandConverter: KConverter<Quiz, QuizCommand>{
     override fun convert(source: Quiz): QuizCommand =
         QuizCommand().apply {
             private = source.isPrivate

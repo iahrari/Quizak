@@ -1,6 +1,7 @@
 package ir.dagger.quizak.controller
 
 import ir.dagger.quizak.auth.ApplicationUser
+import ir.dagger.quizak.controller.command.BaseQuestionCommand
 import ir.dagger.quizak.controller.command.MainEntityCommand
 import ir.dagger.quizak.controller.command.MediaData
 import ir.dagger.quizak.controller.command.QuizCommand
@@ -13,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import kotlin.reflect.full.createInstance
 
 @Controller
 @RequestMapping("/quiz")
@@ -75,13 +77,32 @@ class QuizController(
     }
 
     @GetMapping("/{quizId}/addQuestion/{quizType}")
-    fun addQuestion(
+    fun addQuestionPage(
         model: Model,
         @PathVariable quizId: String,
         @PathVariable quizType: QuizType,
         @AuthenticationPrincipal user: ApplicationUser
     ): String {
+        val question = QuizType.valueOf(quizType.name).questionCommandType
+            .createInstance()
+        question.quizId = quizId
         model.addAttribute("user", user)
-        return ""
+        model.addAttribute("question", question)
+        model.addAttribute("media", question.mediaData)
+
+        return "quiz/AddQuestions"
+    }
+
+    @PostMapping(
+        "/{quizId}/addQuestion/{quizType}",
+        consumes = [MediaType.MULTIPART_FORM_DATA_VALUE]
+    )
+    fun addQuestion(
+        @PathVariable quizId: String,
+        @ModelAttribute question: BaseQuestionCommand,
+        @ModelAttribute media: MediaData
+    ): String {
+        question.mediaData = media
+        return "redirect:quiz/${quizId}/show"
     }
 }

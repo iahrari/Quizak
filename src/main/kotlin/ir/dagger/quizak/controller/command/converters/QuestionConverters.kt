@@ -6,7 +6,6 @@ import ir.dagger.quizak.controller.command.TrueFalseQCommand
 import ir.dagger.quizak.db.entity.quiz.BaseQuestion
 import ir.dagger.quizak.db.entity.quiz.question.MultiChoiceQ
 import ir.dagger.quizak.db.entity.quiz.question.TrueFalseQ
-import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
 
 fun copyBaseQuestionToCommand(question: BaseQuestionCommand, source: BaseQuestion): BaseQuestionCommand{
@@ -21,7 +20,7 @@ fun copyBaseQuestionToCommand(question: BaseQuestionCommand, source: BaseQuestio
 }
 
 @Component
-class BaseQuestionConverter : Converter<BaseQuestion, BaseQuestionCommand>{
+class BaseQuestionConverter : KConverter<BaseQuestion, BaseQuestionCommand>{
     @Synchronized
     override fun convert(source: BaseQuestion): BaseQuestionCommand =
         copyBaseQuestionToCommand(BaseQuestionCommand(), source)
@@ -29,7 +28,7 @@ class BaseQuestionConverter : Converter<BaseQuestion, BaseQuestionCommand>{
 }
 
 @Component
-class TrueFalseQCommandConverter: Converter<TrueFalseQ, TrueFalseQCommand> {
+class TrueFalseQCommandConverter: KConverter<TrueFalseQ, TrueFalseQCommand> {
     @Synchronized
     override fun convert(source: TrueFalseQ): TrueFalseQCommand =
         TrueFalseQCommand().apply {
@@ -39,7 +38,7 @@ class TrueFalseQCommandConverter: Converter<TrueFalseQ, TrueFalseQCommand> {
 }
 
 @Component
-class TrueFalseQConverter: Converter<TrueFalseQCommand, TrueFalseQ> {
+class TrueFalseQConverter: KConverter<TrueFalseQCommand, TrueFalseQ> {
     @Synchronized
     override fun convert(source: TrueFalseQCommand): TrueFalseQ =
         TrueFalseQ(
@@ -53,7 +52,7 @@ class TrueFalseQConverter: Converter<TrueFalseQCommand, TrueFalseQ> {
 }
 
 @Component
-class MultiChoiceQConverter: Converter<MultiChoiceQCommand, MultiChoiceQ> {
+class MultiChoiceQConverter: KConverter<MultiChoiceQCommand, MultiChoiceQ> {
     @Synchronized
     override fun convert(source: MultiChoiceQCommand): MultiChoiceQ =
         MultiChoiceQ(
@@ -75,7 +74,7 @@ class MultiChoiceQConverter: Converter<MultiChoiceQCommand, MultiChoiceQ> {
 }
 
 @Component
-class MultiChoiceQCommandConverter: Converter<MultiChoiceQ, MultiChoiceQCommand> {
+class MultiChoiceQCommandConverter: KConverter<MultiChoiceQ, MultiChoiceQCommand> {
     @Synchronized
     override fun convert(source: MultiChoiceQ): MultiChoiceQCommand =
         MultiChoiceQCommand().apply {

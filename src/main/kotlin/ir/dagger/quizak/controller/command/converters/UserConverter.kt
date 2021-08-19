@@ -6,7 +6,7 @@ import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
 
 @Component
-class UserConverter: Converter<UserCommand, User> {
+class UserConverter: KConverter<UserCommand, User> {
     @Synchronized
     override fun convert(source: UserCommand): User? =
         if (source.phone == null && source.email == null) null
@@ -28,7 +28,7 @@ class UserConverter: Converter<UserCommand, User> {
 }
 
 @Component
-class UserCommandConverter: Converter<User, UserCommand> {
+class UserCommandConverter: KConverter<User, UserCommand> {
     @Synchronized
     override fun convert(source: User): UserCommand =
         UserCommand()
