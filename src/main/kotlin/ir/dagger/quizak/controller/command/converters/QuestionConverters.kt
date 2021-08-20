@@ -33,7 +33,7 @@ class TrueFalseQCommandConverter: KConverter<TrueFalseQ, TrueFalseQCommand> {
     override fun convert(source: TrueFalseQ): TrueFalseQCommand =
         TrueFalseQCommand().apply {
             copyBaseQuestionToCommand(this, source)
-            itsTrue = source.isTrue
+            correct = source.isTrue
         }
 }
 
@@ -44,7 +44,7 @@ class TrueFalseQConverter: KConverter<TrueFalseQCommand, TrueFalseQ> {
         TrueFalseQ(
             question = source.question!!,
             answerTime = source.answerTime * 1000,
-            isTrue = source.itsTrue
+            isTrue = source.correct
         ).apply {
             id.row = source.rowId
             id.quizId = source.quizId

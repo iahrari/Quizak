@@ -1,11 +1,13 @@
 package ir.dagger.quizak.services.db
 
+import ir.dagger.quizak.controller.command.converters.QuizCommandConverter
 import ir.dagger.quizak.controller.command.converters.UserCommandConverter
 import ir.dagger.quizak.controller.command.converters.UserConverter
 import ir.dagger.quizak.db.entity.customers.EmailVerification
 import ir.dagger.quizak.db.entity.customers.User
 import ir.dagger.quizak.db.repostiory.EmailVerificationRepository
 import ir.dagger.quizak.db.repostiory.UserRepository
+import ir.dagger.quizak.services.FileService
 import ir.dagger.quizak.services.email.EmailService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -24,6 +26,7 @@ import java.util.*
 internal class UserServiceImplTest {
     @Mock private lateinit var userRepository: UserRepository
     @Mock private lateinit var emailVerificationRepository: EmailVerificationRepository
+    @Mock private lateinit var fileService: FileService
     private lateinit var userCommandConverter: UserCommandConverter
     private lateinit var userConverter: UserConverter
     @Mock private lateinit var emailService: EmailService
@@ -32,13 +35,16 @@ internal class UserServiceImplTest {
     @BeforeEach
     fun setUp() {
         userCommandConverter = UserCommandConverter()
-        userConverter = UserConverter(BCryptPasswordEncoder(10))
+        userConverter = UserConverter()
         userService = UserServiceImpl(
+            BCryptPasswordEncoder(10),
             userRepository,
+            QuizCommandConverter(),
             emailVerificationRepository,
             userCommandConverter,
             userConverter,
-            emailService
+            emailService,
+            fileService
         )
     }
 

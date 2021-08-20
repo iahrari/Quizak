@@ -1,6 +1,7 @@
 package ir.dagger.quizak.services.db
 
 import ir.dagger.quizak.auth.ApplicationUser
+import ir.dagger.quizak.controller.command.BaseQuestionCommand
 import ir.dagger.quizak.controller.command.QuizCommand
 import ir.dagger.quizak.db.entity.quiz.Quiz
 
@@ -9,4 +10,8 @@ interface QuizService {
     fun findQuizCommandById(id: String, user: ApplicationUser): QuizCommand
     fun findQuizById(id: String, user: ApplicationUser): Quiz
     fun deleteById(id: String, user: ApplicationUser)
+    fun saveQuestion(
+        questionCommand: BaseQuestionCommand,
+        user: ApplicationUser
+    ): BaseQuestionCommand
 }

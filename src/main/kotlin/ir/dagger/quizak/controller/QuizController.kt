@@ -1,10 +1,7 @@
 package ir.dagger.quizak.controller
 
 import ir.dagger.quizak.auth.ApplicationUser
-import ir.dagger.quizak.controller.command.BaseQuestionCommand
-import ir.dagger.quizak.controller.command.MainEntityCommand
-import ir.dagger.quizak.controller.command.MediaData
-import ir.dagger.quizak.controller.command.QuizCommand
+import ir.dagger.quizak.controller.command.*
 import ir.dagger.quizak.db.entity.customers.Institute
 import ir.dagger.quizak.db.entity.quiz.QuizType
 import ir.dagger.quizak.services.db.QuizService
@@ -14,6 +11,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import javax.servlet.http.HttpServletRequest
+import kotlin.reflect.full.cast
 import kotlin.reflect.full.createInstance
 
 @Controller
@@ -21,8 +20,6 @@ import kotlin.reflect.full.createInstance
 class QuizController(
     private val quizService: QuizService
 ) {
-    @Autowired
-    private lateinit var defaultInstitute: Institute
 
     @GetMapping("/{quizId}/show")
     fun showQuiz(
@@ -81,16 +78,17 @@ class QuizController(
         model: Model,
         @PathVariable quizId: String,
         @PathVariable quizType: QuizType,
-        @AuthenticationPrincipal user: ApplicationUser
+        @AuthenticationPrincipal user: ApplicationUser,
+        request: HttpServletRequest
     ): String {
-        val question = QuizType.valueOf(quizType.name).questionCommandType
+        val question = quizType.questionCommandType
             .createInstance()
         question.quizId = quizId
-        model.addAttribute("user", user)
         model.addAttribute("question", question)
+        model.addAttribute("user", user)
         model.addAttribute("media", question.mediaData)
-
-        return "quiz/AddQuestions"
+//${quizType.name}
+        return "quiz/AddQuestions${quizType}"
     }
 
     @PostMapping(
@@ -99,10 +97,16 @@ class QuizController(
     )
     fun addQuestion(
         @PathVariable quizId: String,
-        @ModelAttribute question: BaseQuestionCommand,
-        @ModelAttribute media: MediaData
+        @PathVariable quizType: QuizType,
+        @ModelAttribute media: MediaData,
+        @AuthenticationPrincipal user: ApplicationUser,
+        request: HttpServletRequest
     ): String {
+        println("Request param: ${request.parameterMap}")
+        val question = quizType.questionCommandType.createInstance()
         question.mediaData = media
-        return "redirect:quiz/${quizId}/show"
+        quizType.paramFunction(request.parameterMap, question)
+        quizService.saveQuestion(question, user)
+        return "redirect:/quiz/${quizId}/show"
     }
 }

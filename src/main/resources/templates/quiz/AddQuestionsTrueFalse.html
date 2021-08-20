@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html th:replace="~{quiz/AddQuestions::addQuestionBase(~{::body}, ${user}, ${question}, ${media})}">
+<body>
+<!--/*@thymesVar id="question" type="ir.dagger.quizak.controller.command.TrueFalseQCommand"*/-->
+<div class="md-3 p-2">
+    <input type="checkbox" class="form-check-input" id="correct" th:field="${question.correct}">
+    <label for="correct" class="form-check-label" th:text="#{text.isTrue}">True?</label>
+</div>
+</body>
+</html>

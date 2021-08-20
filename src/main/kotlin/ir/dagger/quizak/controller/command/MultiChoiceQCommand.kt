@@ -1,6 +1,11 @@
 package ir.dagger.quizak.controller.command
 
+import ir.dagger.quizak.db.entity.quiz.QuizType
+
 class MultiChoiceQCommand: BaseQuestionCommand() {
+    init {
+        type = QuizType.MultiChoice
+    }
     var opt1: String? = null
     var opt2: String? = null
     var opt3: String? = null

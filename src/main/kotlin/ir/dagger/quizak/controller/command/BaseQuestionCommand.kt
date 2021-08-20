@@ -1,7 +1,6 @@
 package ir.dagger.quizak.controller.command
 
 import ir.dagger.quizak.db.entity.quiz.QuizType
-import org.springframework.web.multipart.MultipartFile
 
 open class BaseQuestionCommand {
     var quizId: String? = null

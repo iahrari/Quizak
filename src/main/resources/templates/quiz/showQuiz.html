@@ -54,9 +54,9 @@
     </thead>
     <tbody>
     <tr th:each="question: ${quiz.questions}">
-        <td th:text="${question.id.row} + 1">1</td>
+        <td th:text="${question.id.row}">1</td>
         <td th:text="${question.question}">What is what?</td>
-        <td th:text="#{${question.getType().name()}}"></td>
+        <td th:text="#{${question.getType().text}}"></td>
     </tr>
     </tbody>
 </table>
