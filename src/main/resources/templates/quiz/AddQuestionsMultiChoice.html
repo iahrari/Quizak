@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html th:replace="~{quiz/AddQuestions::addQuestionBase(~{::body}, ${user}, ${question}, ${media})}">
+<body>
+<!--/*@thymesVar id="question" type="ir.dagger.quizak.controller.command.MultiChoiceQCommand"*/-->
+<div class="row md-3 mt-2 p-2 g-2">
+    <div class="col-md-6">
+        <input type="checkbox" class="form-check-input" id="isAnswer1" th:field="${question.isAnswer1}">
+        <label for="isAnswer1" class="form-check-label" th:text="#{text.isTrue}">True?</label>
+        <textarea type="text" class="form-control"
+                  id="opt1" th:field="${question.opt1}" th:placeholder="#{text.requiredAnswer}"
+                  maxlength="255" rows="4" required></textarea>
+    </div>
+
+    <div class="col-md-6">
+        <input type="checkbox" class="form-check-input" id="isAnswer2" th:field="${question.isAnswer2}">
+        <label for="isAnswer2" class="form-check-label" th:text="#{text.isTrue}">True?</label>
+        <textarea type="text" class="form-control"
+                  id="opt2" th:field="${question.opt2}" th:placeholder="#{text.requiredAnswer}"
+                  maxlength="255" rows="4" required></textarea>
+    </div>
+
+    <div class="col-md-6">
+        <input type="checkbox" class="form-check-input" id="isAnswer3" th:field="${question.isAnswer3}">
+        <label for="isAnswer3" class="form-check-label" th:text="#{text.isTrue}">True?</label>
+        <textarea type="text" class="form-control" th:placeholder="#{text.answer}"
+                  id="opt3" th:field="${question.opt3}"
+                  maxlength="255" rows="4"></textarea>
+    </div>
+
+    <div class="col-md-6">
+        <input type="checkbox" class="form-check-input" id="correct" th:field="${question.isAnswer4}">
+        <label for="correct" class="form-check-label" th:text="#{text.isTrue}">True?</label>
+        <textarea type="text" class="form-control" th:placeholder="#{text.answer}"
+                  id="opt4" th:field="${question.opt4}"
+                  maxlength="255" rows="4"></textarea>
+    </div>
+</div>
+</body>
+</html>
