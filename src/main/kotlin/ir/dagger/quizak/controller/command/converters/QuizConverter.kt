@@ -41,15 +41,12 @@ class QuizConverter(
 class QuizCommandConverter: KConverter<Quiz, QuizCommand>{
     override fun convert(source: Quiz): QuizCommand =
         QuizCommand().apply {
+            copyMainEntityCommandData(source, this)
             private = source.isPrivate
             classId = source.classId.id
             if(source.isInstituteInitialized())
                 instituteId = source.institute.id
             if(source.isCreatedByInitialized())
                 createdById = source.createdBy.id
-            name = source.name
-            description = source.description
-            id = source.id
-            mediaData.mediaId = source.media?.id
         }
 }
