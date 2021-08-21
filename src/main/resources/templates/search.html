@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'search', #{text.search}, ${user})}">
+
+<body>
+<div class="row d-flex justify-content-center mx-2">
+  <div class="col-md-8 list-group pe-0">
+    <a th:each="quiz: ${quizzes}" th:href="@{/quiz/__${quiz.id}__/show}"
+       class="list-group-item list-group-item-action d-flex justify-content-between align-item-start">
+
+      <div class="col-10">
+        <div class="fw-bold" th:text="${quiz.name}"></div>
+        <div class="text-reset" th:text="${quiz.description}"></div>
+      </div>
+
+      <img th:if="${quiz.media != null}" th:src="@{/media/__${quiz.media.id}__}"
+           alt="quiz pic" th:alt="${quiz.name} + ' picture'" class="col-2 img-fluid"
+           src="https://via.placeholder.com/150.png?text=Quizak.ir">
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

@@ -9,9 +9,7 @@ import javax.persistence.*
 data class AcceptedUser(
     @EmbeddedId
     val id: ClassUserId,
-    @Embedded
-    val date: TimeStamps,
-){
+): TimeStamps(){
     @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("userId")
     lateinit var user: User
@@ -24,11 +22,9 @@ data class AcceptedUser(
 data class RegisterClass(
     @EmbeddedId
     val id: ClassUserId,
-    @Embedded
-    val date: TimeStamps,
 
     var accepted: Boolean? = null
-){
+): TimeStamps(){
     @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("userId")
     lateinit var user: User

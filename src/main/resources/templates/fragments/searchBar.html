@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<body th:fragment="search()">
+<form class="d-flex" method="get" th:action="@{/search}">
+    <input class="form-control me-2" type="search"
+           name="search" th:placeholder="#{text.search}"
+           aria-label="Search" required>
+    <button class="btn btn-outline-light" type="submit" th:text="#{text.search}"></button>
+</form>
+</body>
+</html>

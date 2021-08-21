@@ -31,6 +31,24 @@
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <div class="navbar-nav text-center">
+                <a class="btn d-flex flex-row justify-content-center"
+                   th:unless="${user == null}"
+                   th:href="@{/user/profile}">
+                    <div>
+                        <img th:if="${user.mediaId != null}"
+                             th:src="@{/media/__${user.mediaId}__}"
+                             class="rounded-circle border border-2" width="25" height="25"
+                             alt="User profile image" src="https://via.placeholder.com/255.png?text=Quizak.ir">
+
+                        <b th:unless="${user.mediaId != null}"
+                           class="rounded-circle text-center border border-2  text-light bg-dark px-3 py-2"
+                           style="width:30px; height: 24px"
+                           th:text="${user.username.substring(0, 1).toUpperCase()}"></b>
+                    </div>
+                    <div class="d-block d-md-none text-white ms-2">
+                        <b th:text="${user.username}"></b>
+                    </div>
+                </a>
                 <a th:class="'nav-link ' + ${(menu == 'home')? 'disabled': 'active'}"
                    th:text="#{navbar.home}"
                    th:href="@{/}">Home</a>
@@ -50,24 +68,8 @@
                    th:text="#{message.signIn.title}"
                    th:href="@{/login}">Sign Up</a>
                 <!--/*@thymesVar id="user" type="ir.dagger.quizak.auth.ApplicationUser"*/-->
-                <a class="btn d-flex flex-row justify-content-center m-md-0 mx-3 ps-0"
-                   th:unless="${user == null}"
-                    th:href="@{/user/profile}">
-                    <div>
-                        <img th:if="${user.mediaId != null}"
-                             th:src="@{/media/__${user.mediaId}__}"
-                             class="rounded-circle border border-2" width="25" height="25"
-                             alt="User profile image" src="https://via.placeholder.com/255.png?text=Quizak.ir">
 
-                        <b th:unless="${user.mediaId != null}"
-                           class="rounded-circle text-center border border-2  text-light bg-dark px-3 py-2"
-                           style="width:30px; height: 24px"
-                           th:text="${user.username.substring(0, 1).toUpperCase()}"></b>
-                    </div>
-                    <div class="d-block d-md-none text-white ms-2">
-                        <b th:text="${user.username}"></b>
-                    </div>
-                </a>
+                <th:block th:include="~{fragments/searchBar :: search()}"/>
             </div>
         </div>
     </div>
