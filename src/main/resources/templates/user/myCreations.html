@@ -10,24 +10,25 @@
         </div>
         <div class="row d-flex g-2">
             <div class="col-sm-6 d-flex justify-content-center">
-                <button class="btn btn-outline-dark" th:href="@{/quiz/__${quiz.id}__/show}"
-                        th:text="#{text.view}"></button>
+                <a class="btn btn-outline-dark" th:href="@{/quiz/__${quiz.id}__/show}"
+                        th:text="#{text.view}"></a>
             </div>
             <div class="col-sm-6 d-flex justify-content-center">
                 <button class="btn btn-outline-danger text-danger"
-                        th:attr="onclick=|deleteFunction('#{text.doYouWantToDelete(${quiz.name})}', '${quiz.id}')|"
+                        th:attr="onclick=|deleteFunction('#{text.doYouWantToDelete(${quiz.name})}', '/quiz/${quiz.id}/delete')|"
                         th:href="@{/quiz/__${quiz.id}__/show}" th:text="#{text.delete}"></button>
             </div>
         </div>
     </li>
 </ol>
-<script>
-    function deleteFunction(name, id) {
-        const r = confirm(name);
-        if (r) {
-            window.open("/quiz/" + id + "/delete", "_self");
-        }
-    }
-</script>
+<th:block th:replace="~{fragments/deleteFunction :: deleteFunction()}"/>
+<!--<script>-->
+<!--    function deleteFunction(name, url) {-->
+<!--        const r = confirm(name);-->
+<!--        if (r) {-->
+<!--            window.open(url, "_self");-->
+<!--        }-->
+<!--    }-->
+<!--</script>-->
 </body>
 </html>

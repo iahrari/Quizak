@@ -6,15 +6,19 @@ import ir.dagger.quizak.controller.command.QuizCommand
 import ir.dagger.quizak.controller.command.converters.QuizCommandConverter
 import ir.dagger.quizak.controller.command.converters.QuizConverter
 import ir.dagger.quizak.db.entity.MediaType
+import ir.dagger.quizak.db.entity.quiz.BaseQuestion
+import ir.dagger.quizak.db.entity.quiz.QuestionId
 import ir.dagger.quizak.db.entity.quiz.Quiz
 import ir.dagger.quizak.db.repostiory.ClassRepository
 import ir.dagger.quizak.db.repostiory.QuestionRepository
 import ir.dagger.quizak.db.repostiory.QuizRepository
 import ir.dagger.quizak.db.repostiory.UserRepository
 import ir.dagger.quizak.services.FileService
+import org.aspectj.weaver.patterns.TypePatternQuestions
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
+import java.util.Comparator
 import javax.transaction.Transactional
 import kotlin.reflect.full.createInstance
 
@@ -89,7 +93,8 @@ class QuizServiceImpl(
 
         if(quiz.createdBy.id == user.id){
             if(questionCommand.rowId == null)
-                questionCommand.rowId = quiz.getQuestions().size + 1
+                questionCommand.rowId = (quiz.getQuestions().stream()
+                    .max { a, b -> a.id.row!! - b.id.row!! }.orElseThrow().id.row?: 0) + 1
 
             val question = questionCommand.type!!.converter
                 .createInstance().convert(questionCommand)!!
@@ -105,6 +110,24 @@ class QuizServiceImpl(
             return question.type.commandConverter.createInstance()
                 .convert(questionRepository.save(question))!!
         } else throw HttpClientErrorException(HttpStatus.UNAUTHORIZED)
+    }
+
+    override fun deleteQuestionById(quizId: String, rowId: Int, user: ApplicationUser) {
+        val question = questionRepository.findById(QuestionId(quizId).apply { this.row = rowId })
+            .orElseThrow { (HttpClientErrorException(HttpStatus.NOT_FOUND)) }
+
+        if(question.quiz.createdBy.id == user.id)
+            questionRepository.delete(question)
+        else throw HttpClientErrorException(HttpStatus.UNAUTHORIZED)
+    }
+
+    override fun findQuestionById(quizId: String, row: Int, user: ApplicationUser): BaseQuestionCommand {
+        val question = questionRepository.findById(QuestionId(quizId).apply { this.row = row })
+            .orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND) }
+
+        if(question.quiz.createdBy.id == user.id)
+            return question.type.commandConverter.createInstance().convert(question)!!
+        else throw HttpClientErrorException(HttpStatus.UNAUTHORIZED)
     }
 
 }

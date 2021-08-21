@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" >
+<body>
+<script th:fragment="deleteFunction()">
+    function deleteFunction(name, url) {
+        const r = confirm(name);
+        if (r) {
+            window.open(url, "_self");
+        }
+    }
+</script>
+</body>
+</html>

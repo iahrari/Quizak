@@ -57,7 +57,7 @@ class Quiz(
     fun getSessions(): Set<QuizSession> = sessions
 
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, mappedBy = "quiz")
+    @OneToMany(cascade = [CascadeType.REMOVE], fetch = FetchType.EAGER, mappedBy = "quiz")
     private val questions: MutableSet<BaseQuestion> = hashSetOf()
     fun addQuestion(question: BaseQuestion){
         question.quiz = this

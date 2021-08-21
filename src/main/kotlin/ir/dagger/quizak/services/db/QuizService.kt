@@ -14,4 +14,12 @@ interface QuizService {
         questionCommand: BaseQuestionCommand,
         user: ApplicationUser
     ): BaseQuestionCommand
+
+    fun deleteQuestionById(
+        quizId: String,
+        rowId: Int,
+        user: ApplicationUser
+    )
+
+    fun findQuestionById(quizId: String, row: Int, user: ApplicationUser): BaseQuestionCommand
 }

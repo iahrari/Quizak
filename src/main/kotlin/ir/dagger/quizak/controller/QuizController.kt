@@ -87,8 +87,25 @@ class QuizController(
         model.addAttribute("question", question)
         model.addAttribute("user", user)
         model.addAttribute("media", question.mediaData)
-//${quizType.name}
+
         return "quiz/AddQuestions${quizType}"
+    }
+
+    @GetMapping("/{quizId}/updateQuestion/{rowId}")
+    fun updateQuestionPage(
+        model: Model,
+        @PathVariable quizId: String,
+        @PathVariable rowId: Int,
+        @AuthenticationPrincipal user: ApplicationUser,
+        request: HttpServletRequest
+    ): String {
+        val question = quizService.findQuestionById(quizId, rowId, user)
+        question.quizId = quizId
+        model.addAttribute("question", question)
+        model.addAttribute("user", user)
+        model.addAttribute("media", question.mediaData)
+
+        return "quiz/AddQuestions${question.type!!}"
     }
 
     @PostMapping(
@@ -107,6 +124,16 @@ class QuizController(
         question.mediaData = media
         quizType.paramFunction(request.parameterMap, question)
         quizService.saveQuestion(question, user)
+        return "redirect:/quiz/${quizId}/show"
+    }
+
+    @GetMapping("/{quizId}/deleteQuestion/{rowId}")
+    fun deleteQuestion(
+        @PathVariable quizId: String,
+        @PathVariable rowId: Int,
+        @AuthenticationPrincipal user: ApplicationUser
+    ): String {
+        quizService.deleteQuestionById(quizId, rowId, user)
         return "redirect:/quiz/${quizId}/show"
     }
 }
