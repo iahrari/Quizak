@@ -8,19 +8,23 @@
             <div class="fw-bold" th:text="${quiz.name}"></div>
             <div th:text="${quiz.description}"></div>
         </div>
-        <div>
-            <a class="btn btn-outline-dark" th:href="@{/quiz/__${quiz.id}__/show}"
-               th:text="#{text.view}"></a>
-            <button class="btn btn-outline-danger text-danger m-md-0 mt-2"
-                    th:attr="onclick=|deleteFunction('#{text.doYouWantToDelete(${quiz.name})}', '${quiz.id}')|"
-                    th:href="@{/quiz/__${quiz.id}__/show}" th:text="#{text.delete}"></button>
+        <div class="row d-flex g-2">
+            <div class="col-sm-6 d-flex justify-content-center">
+                <button class="btn btn-outline-dark" th:href="@{/quiz/__${quiz.id}__/show}"
+                        th:text="#{text.view}"></button>
+            </div>
+            <div class="col-sm-6 d-flex justify-content-center">
+                <button class="btn btn-outline-danger text-danger"
+                        th:attr="onclick=|deleteFunction('#{text.doYouWantToDelete(${quiz.name})}', '${quiz.id}')|"
+                        th:href="@{/quiz/__${quiz.id}__/show}" th:text="#{text.delete}"></button>
+            </div>
         </div>
     </li>
 </ol>
 <script>
-    function deleteFunction(name, id){
+    function deleteFunction(name, id) {
         const r = confirm(name);
-        if(r){
+        if (r) {
             window.open("/quiz/" + id + "/delete", "_self");
         }
     }
