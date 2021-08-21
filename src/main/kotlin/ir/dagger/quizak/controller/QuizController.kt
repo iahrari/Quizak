@@ -2,17 +2,14 @@ package ir.dagger.quizak.controller
 
 import ir.dagger.quizak.auth.ApplicationUser
 import ir.dagger.quizak.controller.command.*
-import ir.dagger.quizak.db.entity.customers.Institute
 import ir.dagger.quizak.db.entity.quiz.QuizType
 import ir.dagger.quizak.services.db.QuizService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
-import kotlin.reflect.full.cast
 import kotlin.reflect.full.createInstance
 
 @Controller
@@ -73,6 +70,7 @@ class QuizController(
         return "redirect:/quiz/${q.id}/show"
     }
 
+    @Suppress("SpringMVCViewInspection")
     @GetMapping("/{quizId}/addQuestion/{quizType}")
     fun addQuestionPage(
         model: Model,
@@ -91,6 +89,7 @@ class QuizController(
         return "quiz/AddQuestions${quizType}"
     }
 
+    @Suppress("SpringMVCViewInspection")
     @GetMapping("/{quizId}/updateQuestion/{rowId}")
     fun updateQuestionPage(
         model: Model,

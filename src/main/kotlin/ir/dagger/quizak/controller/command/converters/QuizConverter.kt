@@ -7,7 +7,6 @@ import ir.dagger.quizak.db.entity.quiz.Quiz
 import ir.dagger.quizak.db.repostiory.ClassRepository
 import ir.dagger.quizak.db.repostiory.InstituteRepository
 import ir.dagger.quizak.db.repostiory.UserRepository
-import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
 
 @Component

@@ -1,7 +1,6 @@
 package ir.dagger.quizak.controller
 
 import ir.dagger.quizak.auth.ApplicationUser
-import ir.dagger.quizak.controller.command.MainEntityCommand
 import ir.dagger.quizak.controller.command.MediaData
 import ir.dagger.quizak.controller.command.UserCommand
 import ir.dagger.quizak.services.db.UserService
