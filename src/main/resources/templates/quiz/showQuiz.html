@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/cardLayout :: layout (~{::body},'newQuiz', ${quiz.name}, ${quiz.createdById == user.id}, #{text.edit}, @{/quiz/__${quiz.id}__/edit}, ${user})}">
+      th:replace="~{fragments/cardLayout :: layout (~{::body},'newQuiz', ${quiz.name}, ${quiz.createdBy.id == user.id}, #{text.edit}, @{/quiz/__${quiz.id}__/edit}, ${user})}">
 
 <body>
 
@@ -68,6 +68,13 @@
     </tr>
     </tbody>
 </table>
+
+<div class="row text-muted text-center">
+    <p class="text-reset">
+        <span th:text="#{text.createdBy}"></span>
+        <a th:href="@{/user/__${quiz.createdBy.uniqueName}__/show}" th:text="${quiz.createdBy.uniqueName}"></a>
+    </p>
+</div>
 <th:block th:replace="~{fragments/deleteFunction :: deleteFunction()}"/>
 </body>
 </html>

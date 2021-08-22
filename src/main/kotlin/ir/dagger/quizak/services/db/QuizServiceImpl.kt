@@ -5,6 +5,7 @@ import ir.dagger.quizak.controller.command.BaseQuestionCommand
 import ir.dagger.quizak.controller.command.QuizCommand
 import ir.dagger.quizak.controller.command.converters.QuizCommandConverter
 import ir.dagger.quizak.controller.command.converters.QuizConverter
+import ir.dagger.quizak.controller.command.converters.UserCommandConverter
 import ir.dagger.quizak.db.entity.MediaType
 import ir.dagger.quizak.db.entity.quiz.BaseQuestion
 import ir.dagger.quizak.db.entity.quiz.QuestionId
@@ -31,6 +32,7 @@ class QuizServiceImpl(
     private val quizConverter: QuizConverter,
     private val quizCommandConverter: QuizCommandConverter,
     private val fileService: FileService,
+    private val userCommandConverter: UserCommandConverter,
 ) : QuizService {
 
     @Transactional
@@ -38,7 +40,11 @@ class QuizServiceImpl(
         quizCommand: QuizCommand,
         user: ApplicationUser,
     ): QuizCommand {
-        quizCommand.createdById = user.id
+        quizCommand.createdBy = userCommandConverter.convert(
+            userRepository.findById(user.id).orElseThrow {
+                HttpClientErrorException(HttpStatus.UNAUTHORIZED)
+            }
+        )
         val quiz = if (quizCommand.id == null) quizConverter.convert(quizCommand)
         else quizRepository.findById(quizCommand.id!!)
             .orElse(quizConverter.convert(quizCommand))

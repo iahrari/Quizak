@@ -31,7 +31,7 @@ class QuizConverter(
             description = source.description,
         ).apply {
             id = source.id
-            createdBy = userRepository.findById(source.createdById!!).orElseThrow()
+            createdBy = userRepository.findById(source.createdBy!!.id!!).orElseThrow()
             institute = if(source.instituteId == null) defaultInstitute
                         else instituteRepository.findById(source.instituteId!!).orElseThrow()
         }
@@ -39,7 +39,8 @@ class QuizConverter(
 
 @Component
 class QuizCommandConverter(
-    private val classCommandConverter: ClassCommandConverter
+    private val classCommandConverter: ClassCommandConverter,
+    private val userCommandConverter: UserCommandConverter,
 ): KConverter<Quiz, QuizCommand>{
     override fun convert(source: Quiz): QuizCommand =
         QuizCommand().apply {
@@ -49,7 +50,7 @@ class QuizCommandConverter(
             if(source.isInstituteInitialized())
                 instituteId = source.institute.id
             if(source.isCreatedByInitialized())
-                createdById = source.createdBy.id
+                createdBy = userCommandConverter.convert(source.createdBy)
 
             questions = source.getQuestions().map {
                 it.type.commandConverter.createInstance().convert(it)!!
