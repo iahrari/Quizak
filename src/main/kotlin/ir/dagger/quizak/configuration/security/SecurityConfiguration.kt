@@ -37,6 +37,9 @@ class SecurityConfiguration(
             .permitAll()
             .defaultSuccessUrl("/")
             .and()
+            .logout()
+            .logoutSuccessUrl("/")
+            .and()
             .rememberMe()
     }
 
