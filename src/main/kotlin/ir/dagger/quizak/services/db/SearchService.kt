@@ -1,7 +1,7 @@
 package ir.dagger.quizak.services.db
 
-import ir.dagger.quizak.db.entity.quiz.Quiz
+import ir.dagger.quizak.controller.command.QuizCommand
 
 interface SearchService {
-    fun searchQuizContaining(query: String, userId: String? ): List<Quiz>
+    fun searchQuizContaining(query: String, userId: String? ): List<QuizCommand>
 }

@@ -8,6 +8,7 @@ import ir.dagger.quizak.db.repostiory.ClassRepository
 import ir.dagger.quizak.db.repostiory.InstituteRepository
 import ir.dagger.quizak.db.repostiory.UserRepository
 import org.springframework.stereotype.Component
+import kotlin.reflect.full.createInstance
 
 @Component
 class QuizConverter(
@@ -24,7 +25,7 @@ class QuizConverter(
     override fun convert(source: QuizCommand): Quiz =
         Quiz(
             classId = if(source.classId == null) defaultClass
-                        else classRepository.findById(source.classId!!).orElseThrow(),
+                        else classRepository.findById(source.classId!!.id!!).orElseThrow(),
             name = source.name!!,
             isPrivate = source.private,
             description = source.description,
@@ -37,15 +38,21 @@ class QuizConverter(
 }
 
 @Component
-class QuizCommandConverter: KConverter<Quiz, QuizCommand>{
+class QuizCommandConverter(
+    private val classCommandConverter: ClassCommandConverter
+): KConverter<Quiz, QuizCommand>{
     override fun convert(source: Quiz): QuizCommand =
         QuizCommand().apply {
             copyMainEntityCommandData(source, this)
             private = source.isPrivate
-            classId = source.classId.id
+            classId = classCommandConverter.convert(source.classId)
             if(source.isInstituteInitialized())
                 instituteId = source.institute.id
             if(source.isCreatedByInitialized())
                 createdById = source.createdBy.id
+
+            questions = source.getQuestions().map {
+                it.type.commandConverter.createInstance().convert(it)!!
+            }
         }
 }

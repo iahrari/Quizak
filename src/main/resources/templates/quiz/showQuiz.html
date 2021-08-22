@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/cardLayout :: layout (~{::body},'newQuiz', ${quiz.name}, ${quiz.createdBy.id == user.id}, #{text.edit}, @{/quiz/__${quiz.id}__/edit}, ${user})}">
+      th:replace="~{fragments/cardLayout :: layout (~{::body},'newQuiz', ${quiz.name}, ${quiz.createdById == user.id}, #{text.edit}, @{/quiz/__${quiz.id}__/edit}, ${user})}">
 
 <body>
 
 <div class="row d-flex justify-content-center">
-    <div class="col-sm-6" th:if="${quiz.media != null}">
-        <img class="img-fluid" th:src="@{/media/__${quiz.media.id}__}" alt="Quiz image" src="">
+    <div class="col-sm-6" th:if="${quiz.mediaData.mediaId != null}">
+        <img class="img-fluid" th:src="@{/media/__${quiz.mediaData.mediaId}__}" alt="Quiz image" src="">
     </div>
     <div class="col-sm-6">
         <div class="row md-3 p-2">
@@ -26,7 +26,7 @@
 <div class="row md-3">
     <dl class="row">
         <dt class="col-4 text-muted"
-            th:text="(${quiz.isPrivate()})? #{text.private}: #{text.public}">Private
+            th:text="(${quiz.private})? #{text.private}: #{text.public}">Private
         </dt>
         <dd class="col-8 row">
             <dl class="row">
@@ -42,8 +42,6 @@
 
 </div>
 
-<!--TODO: Add question table-->
-
 <table class="table table-striped table-hover table-responsive" th:if="${quiz.questions.size() != 0}">
     <thead>
     <tr>
@@ -56,16 +54,16 @@
     </thead>
     <tbody>
     <tr th:each="question: ${quiz.questions}">
-        <td th:text="${question.id.row}">1</td>
+        <td th:text="${question.rowId}">1</td>
         <td th:text="${question.question}">What is what?</td>
         <td th:text="#{${question.getType().text}}"></td>
         <td>
-            <a th:href="@{/quiz/__${question.id.quizId}__/updateQuestion/__${question.id.row}__}"
+            <a th:href="@{/quiz/__${question.quizId}__/updateQuestion/__${question.rowId}__}"
                th:text="#{text.view}"></a>
         </td>
         <td>
             <a class="link-danger" th:text="#{text.delete}"
-               th:attr="onclick=|deleteFunction('#{text.doYouWantToDelete(${question.question})}', '/quiz/${question.id.quizId}/deleteQuestion/${question.id.row}')|"></a>
+               th:attr="onclick=|deleteFunction('#{text.doYouWantToDelete(${question.question})}', '/quiz/${question.quizId}/deleteQuestion/${question.rowId}')|"></a>
         </td>
     </tr>
     </tbody>

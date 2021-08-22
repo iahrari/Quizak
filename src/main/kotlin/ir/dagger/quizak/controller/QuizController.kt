@@ -24,7 +24,7 @@ class QuizController(
         @PathVariable quizId: String,
         @AuthenticationPrincipal user: ApplicationUser,
     ): String {
-        model.addAttribute("quiz", quizService.findQuizById(quizId, user))
+        model.addAttribute("quiz", quizService.findQuizCommandById(quizId, user))
         model.addAttribute("user", user)
         return "quiz/showQuiz"
     }

@@ -13,7 +13,7 @@
         <div class="text-reset" th:text="${quiz.description}"></div>
       </div>
 
-      <img th:if="${quiz.media != null}" th:src="@{/media/__${quiz.media.id}__}"
+      <img th:if="${quiz.mediaData.mediaId != null}" th:src="@{/media/__${quiz.mediaData.mediaId}__}"
            alt="quiz pic" th:alt="${quiz.name} + ' picture'" class="col-2 img-fluid"
            src="https://via.placeholder.com/150.png?text=Quizak.ir">
     </a>

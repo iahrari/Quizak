@@ -2,19 +2,12 @@ package ir.dagger.quizak.db.entity.base
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import ir.dagger.quizak.db.entity.Media
-import org.hibernate.annotations.NaturalId
 import javax.persistence.Column
 import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
 open class BaseCustomer(
-    @NaturalId
-    @Column(
-        length = 36,
-        unique = true,
-        nullable = false
-    )
-    var uniqueName: String,
+    uniqueName: String,
 
     @Column(
         length = 12,
@@ -34,7 +27,7 @@ open class BaseCustomer(
     var isLocked: Boolean = false,
     media: Media? = null,
 
-) : MainEntity(name, description, media){
+) : BaseUniqueName(uniqueName, name, description, media){
     var isEnabled: Boolean = false
     var isExpired: Boolean = false
 

@@ -1,7 +1,6 @@
 package ir.dagger.quizak.controller.command
 
-open class BaseCustomerCommand: MainEntityCommand() {
-    var uniqueName: String? = null
+open class BaseCustomerCommand: BaseUniqueNameCommand() {
     var password: String? = null
     var phone: String? = null
     var email: String? = null
