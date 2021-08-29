@@ -38,7 +38,7 @@ class QuizServiceImpl(
     ): QuizCommand {
         quizCommand.createdBy = userCommandConverter.convert(
             userRepository.findById(user.id).orElseThrow {
-                HttpClientErrorException(HttpStatus.UNAUTHORIZED)
+                HttpClientErrorException(HttpStatus.UNAUTHORIZED, "text.error.unauthorized")
             }
         )
         val quiz = if (quizCommand.id == null) quizConverter.convert(quizCommand)
@@ -46,7 +46,8 @@ class QuizServiceImpl(
             .orElse(quizConverter.convert(quizCommand))
 
         quiz.id?.let {
-            if (quiz.createdBy.id != user.id) throw HttpClientErrorException(HttpStatus.FORBIDDEN)
+            if (quiz.createdBy.id != user.id)
+                throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "text.error.unauthorized")
             quiz.name = quizCommand.name!!
             quiz.description = quizCommand.description!!
             quiz.isPrivate = quizCommand.private
@@ -60,29 +61,30 @@ class QuizServiceImpl(
         return quizCommandConverter.convert(quizRepository.save(quiz!!))
     }
 
-    override fun findQuizCommandById(id: String, user: ApplicationUser): QuizCommand {
-//        TODO: Exception handling
-        return quizCommandConverter.convert(findQuizById(id, user))
-    }
+    override fun findQuizCommandById(id: String, user: ApplicationUser): QuizCommand =
+        quizCommandConverter.convert(findQuizById(id, user))
+
 
     override fun findQuizById(id: String, user: ApplicationUser): Quiz {
         val quiz = quizRepository.findById(id).orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND) }
         if (
-            quiz.classId.isPublicForAnyoneToUse
-            || quiz.createdBy.id == user.id
-            || (quiz.classId.teacher != null && quiz.classId.teacher!!.id == user.id)
-            || quiz.classId.registeredUsers.any { it.id.userId == user.id }
+            (!quiz.isPrivate
+                    || quiz.createdBy.id == user.id)
+            && (quiz.classId.isPublicForAnyoneToUse
+                    || (quiz.classId.teacher != null && quiz.classId.teacher!!.id == user.id)
+                    || quiz.classId.registeredUsers.any { it.id.userId == user.id })
         )
             return quiz
-        else throw HttpClientErrorException(HttpStatus.FORBIDDEN)
+        else throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "text.error.unauthorized")
     }
 
     @Transactional
     override fun deleteById(id: String, user: ApplicationUser) {
-        val q = quizRepository.findById(id).orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND) }
+        val q = quizRepository.findById(id)
+            .orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND, "text.error.not_found") }
         if (q.createdBy.id == user.id)
             quizRepository.deleteById(id)
-        else throw HttpClientErrorException(HttpStatus.FORBIDDEN)
+        else throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "text.error.unauthorized")
     }
 
     @Transactional
@@ -91,45 +93,45 @@ class QuizServiceImpl(
         user: ApplicationUser,
     ): BaseQuestionCommand {
         val quiz = quizRepository.findById(questionCommand.quizId!!)
-            .orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND) }
+            .orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND, "text.error.not_found") }
 
-        if(quiz.createdBy.id == user.id){
-            if(questionCommand.rowId == null)
+        if (quiz.createdBy.id == user.id) {
+            if (questionCommand.rowId == null)
                 questionCommand.rowId = (quiz.getQuestions().stream()
-                    .max { a, b -> a.id.row!! - b.id.row!! }.orElse(null)?.id?.row?: 0) + 1
+                    .max { a, b -> a.id.row!! - b.id.row!! }.orElse(null)?.id?.row ?: 0) + 1
 
             val question = questionCommand.type!!.converter
                 .createInstance().convert(questionCommand)!!
             question.quiz = quiz
-            questionCommand.mediaData.file?.let{
-                if(!it.isEmpty)
+            questionCommand.mediaData.file?.let {
+                if (!it.isEmpty)
                     question.media = fileService.save(it, MediaType.Picture)
                         .orElseThrow()
             }
-            questionCommand.mediaData.mediaId?.let{
+            questionCommand.mediaData.mediaId?.let {
                 question.media = fileService.findMediaById(it)
             }
             return question.type.commandConverter.createInstance()
                 .convert(questionRepository.save(question))!!
-        } else throw HttpClientErrorException(HttpStatus.UNAUTHORIZED)
+        } else throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "text.error.unauthorized")
     }
 
     override fun deleteQuestionById(quizId: String, rowId: Int, user: ApplicationUser) {
         val question = questionRepository.findById(QuestionId(quizId).apply { this.row = rowId })
-            .orElseThrow { (HttpClientErrorException(HttpStatus.NOT_FOUND)) }
+            .orElseThrow { (HttpClientErrorException(HttpStatus.NOT_FOUND, "text.error.not_found")) }
 
-        if(question.quiz.createdBy.id == user.id)
+        if (question.quiz.createdBy.id == user.id)
             questionRepository.delete(question)
-        else throw HttpClientErrorException(HttpStatus.UNAUTHORIZED)
+        else throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "text.error.unauthorized")
     }
 
     override fun findQuestionById(quizId: String, row: Int, user: ApplicationUser): BaseQuestionCommand {
         val question = questionRepository.findById(QuestionId(quizId).apply { this.row = row })
-            .orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND) }
+            .orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND, "text.error.not_found") }
 
-        if(question.quiz.createdBy.id == user.id)
+        if (question.quiz.createdBy.id == user.id)
             return question.type.commandConverter.createInstance().convert(question)!!
-        else throw HttpClientErrorException(HttpStatus.UNAUTHORIZED)
+        else throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "text.error.unauthorized")
     }
 
 }

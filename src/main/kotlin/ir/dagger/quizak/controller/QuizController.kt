@@ -4,6 +4,7 @@ import ir.dagger.quizak.auth.ApplicationUser
 import ir.dagger.quizak.controller.command.*
 import ir.dagger.quizak.db.entity.quiz.QuizType
 import ir.dagger.quizak.services.db.QuizService
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
@@ -12,6 +13,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.validation.DirectFieldBindingResult
 import org.springframework.validation.SmartValidator
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.client.HttpClientErrorException
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 import kotlin.reflect.full.createInstance
@@ -53,6 +55,9 @@ class QuizController(
         model.addAttribute("quiz", quiz)
         model.addAttribute("media", quiz.mediaData)
         model.addAttribute("user", user)
+
+        if(quiz.createdBy!!.id != user.id)
+            throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "text.error.unauthorized")
         return QUIZ_ADD_FORM
     }
 
@@ -111,6 +116,7 @@ class QuizController(
     ): String {
         val question = quizService.findQuestionById(quizId, rowId, user)
         question.quizId = quizId
+
         model.addAttribute("question", question)
         model.addAttribute("user", user)
         model.addAttribute("media", question.mediaData)

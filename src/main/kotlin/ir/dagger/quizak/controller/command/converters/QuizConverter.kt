@@ -19,7 +19,6 @@ class QuizConverter(
     private val defaultInstitute: Institute
 ): KConverter<QuizCommand, Quiz> {
 
-    //TODO: Add exception handling
     //TODO: Add media conversion
     @Synchronized
     override fun convert(source: QuizCommand): Quiz =

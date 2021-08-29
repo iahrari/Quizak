@@ -30,8 +30,7 @@ class FileServiceImpl(
     @Transactional
     override fun save(file: MultipartFile, type: MediaType): Optional<Media> {
 
-        //TODO: Exception handling
-        if (file.isEmpty) throw IOException("File is empty")
+        if (file.isEmpty) throw HttpClientErrorException(HttpStatus.BAD_REQUEST, "text.error.file")
         val message = MessageDigest.getInstance("SHA-256")
         val array = message.digest(file.bytes)
         val digest = array.fold("") { str, it -> str + "%02x".format(it) }
@@ -76,7 +75,8 @@ class FileServiceImpl(
     }
 
     override fun findMediaById(mediaId: String): Media =
-        mediaRepository.findById(mediaId).orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND) }
+        mediaRepository.findById(mediaId)
+            .orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND, "text.error.not_found") }
 
     @Bean
     @Throws(IOException::class)

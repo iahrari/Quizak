@@ -36,8 +36,7 @@ class UserServiceImpl(
 
     @Transactional
     override fun createUser(userCommand: UserCommand, password: String): UserCommand {
-        //TODO: Add error handling here
-        val user = userConverter.convert(userCommand) ?: throw RuntimeException("Wrong user")
+        val user = userConverter.convert(userCommand)!!
         user.hash = passwordEncoder.encode(password)
         val returned = userRepository.save(user)
 
@@ -80,33 +79,42 @@ class UserServiceImpl(
                 name = userCommand.name!!
             }
             return userRepository.save(oldUser.get())
-        } else throw HttpClientErrorException(HttpStatus.UNAUTHORIZED)
+        } else throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "text.error.unauthorized")
     }
 
     override fun myCreations(user: ApplicationUser): List<QuizCommand> =
-        userRepository.findById(user.id).orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND) }
+        userRepository.findById(user.id)
+            .orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND, "text.error.not_found") }
             .getCreatedBy().asSequence().sortedByDescending(Quiz::createdAt)
             .map(quizCommandConverter::convert).toList()
 
     override fun findUserByUniqueName(uniqueName: String): UserCommand {
-        val user = userRepository.findByUniqueName(uniqueName).orElseThrow()
+        val user = userRepository.findByUniqueName(uniqueName)
+            .orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND, "text.error.not_found") }
         return userCommandConverter.convert(user)
     }
 
     override fun findUserById(userId: String): UserCommand {
-        val user = userRepository.findById(userId).orElseThrow()
+        val user = userRepository.findById(userId).orElseThrow {
+            HttpClientErrorException(HttpStatus.NOT_FOUND, "text.error.not_found")
+        }
         return userCommandConverter.convert(user)
     }
 
     @Transactional
     override fun verifyEmail(id: String) {
-        //TODO: Exception !!!!!!!
-        val emailVerification = emailVerificationRepository.findById(id).orElseThrow()
-        val user = userRepository.findByEmail(emailVerification.email).orElseThrow()
-        val duration = Duration.between(emailVerification.createdAt, LocalDateTime.now()).toHours()
+        val emailVerification = emailVerificationRepository.findById(id)
+            .orElseThrow { HttpClientErrorException(HttpStatus.NOT_FOUND, "text.error.not_found") }
+        val user = userRepository.findByEmail(emailVerification.email)
+            .orElseThrow { HttpClientErrorException(HttpStatus.BAD_REQUEST, "text.error.not_found") }
+        val duration = Duration.between(
+            emailVerification.createdAt,
+            LocalDateTime.now()
+        ).toHours()
+
         if (duration >= 24) {
-            //TODO: Add exception
             userRepository.delete(user)
+            throw HttpClientErrorException(HttpStatus.BAD_REQUEST, "text.error.signUp.verification")
         } else {
             user.isEnabled = true
             userRepository.save(user)

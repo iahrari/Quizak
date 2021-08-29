@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/cardLayout :: layout (~{::body},'error', ${status}, false, null, null, ${user})}">
+
+<body>
+<div class="row">
+    <h5 class="m-3" th:text="#{${text}}"></h5>
+</div>
+
+</body>
+</html>
