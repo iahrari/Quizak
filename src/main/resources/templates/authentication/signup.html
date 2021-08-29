@@ -4,32 +4,65 @@
 
 <body>
 <form th:object="${user}" method="post" th:action="@{/signup}">
-    <div class="md-3 p-2">
-        <label for="userEmail" class="form-label" th:text="#{text.email}">Email Address</label>
-        <input type="email" class="form-control" id="userEmail" th:field="*{email}" required autofocus>
+    <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger col-12">
+        <p th:text="#{text.error}"></p>
     </div>
-    <div class="input-group md-3 p-2">
+    <div th:class="'md-3 p-2 ' + ${#fields.hasErrors('email')? ' is-invalid': ''}">
+        <label for="userEmail" class="form-label" th:text="#{text.email}">Email Address</label>
+        <input type="email" class="form-control" id="userEmail" th:field="*{email}"
+               required autofocus th:errorclass="is-invalid">
+        <span class="help-block text-danger" th:if="${#fields.hasErrors('email')}">
+            <ul>
+                <li th:each="err : ${#fields.errors('email')}" th:text="${err}"></li>
+            </ul>
+        </span>
+    </div>
+    <div th:class="'input-group md-3 p-2 ' + ${#fields.hasErrors('uniqueName')? 'is-invalid': ''}">
         <label hidden="hidden" for="username"></label>
         <span class="input-group-text" id="atSign">@</span>
         <input type="text" class="form-control"
                id="username" aria-describedby="atSign"
                th:placeholder="#{text.username}"
-               th:field="*{uniqueName}" required>
+               th:field="*{uniqueName}"
+               required th:errorclass="is-invalid">
+        <span class="help-block text-danger" th:if="${#fields.hasErrors('uniqueName')}">
+            <ul>
+                <li th:each="err : ${#fields.errors('uniqueName')}" th:text="${err}"></li>
+            </ul>
+        </span>
     </div>
 
-    <div class="md-3 p-2">
+    <div th:class="'md-3 p-2 ' + ${#fields.hasErrors('name')? 'is-invalid': ''}">
         <label for="name" class="form-label" th:text="#{text.name}">Name</label>
-        <input type="text" class="form-control" id="name" th:field="*{name}" required>
+        <input type="text" class="form-control" id="name" th:field="*{name}"
+               required th:errorclass="is-invalid">
+        <span class="help-block text-danger" th:if="${#fields.hasErrors('name')}">
+            <ul>
+                <li th:each="err : ${#fields.errors('name')}" th:text="${err}"></li>
+            </ul>
+        </span>
     </div>
 
-    <div class="md-3 p-2">
+    <div th:class="'md-3 p-2 ' + ${#fields.hasErrors('familyName')? 'is-invalid': ''}">
         <label for="familyName" class="form-label" th:text="#{text.familyName}">Family Name</label>
-        <input type="text" class="form-control" id="familyName" th:field="*{familyName}" required>
+        <input type="text" class="form-control" id="familyName" th:field="*{familyName}"
+               required th:errorclass="is-invalid">
+        <span class="help-block text-danger" th:if="${#fields.hasErrors('familyName')}">
+            <ul>
+                <li th:each="err : ${#fields.errors('familyName')}" th:text="${err}"></li>
+            </ul>
+        </span>
     </div>
 
-    <div class="md-3 p-2">
+    <div th:class="'md-3 p-2 ' + ${#fields.hasErrors('password')? 'is-invalid': ''}">
         <label for="password" class="form-label" th:text="#{text.password}">Password</label>
-        <input type="password" class="form-control" id="password" th:field="*{password}" required>
+        <input type="password" class="form-control" id="password" th:field="*{password}"
+               required th:errorclass="is-invalid">
+        <span class="help-block text-danger" th:if="${#fields.hasErrors('password')}">
+            <ul>
+                <li th:each="err : ${#fields.errors('password')}" th:text="${err}"></li>
+            </ul>
+        </span>
     </div>
     <div class="md-3 p-2 row justify-content-center">
         <div class="col-6 d-flex justify-content-end">

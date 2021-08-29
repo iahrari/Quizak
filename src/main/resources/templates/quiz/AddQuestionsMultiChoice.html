@@ -2,21 +2,31 @@
 <html th:replace="~{quiz/AddQuestions::addQuestionBase(~{::body}, ${user}, ${question}, ${media})}">
 <body>
 <!--/*@thymesVar id="question" type="ir.dagger.quizak.controller.command.MultiChoiceQCommand"*/-->
-<div class="row md-3 mt-2 p-2 g-2">
+<div class="row md-3 mt-2 p-2 g-2" th:object="${question}">
     <div class="col-md-6">
         <input type="checkbox" class="form-check-input" id="isAnswer1" th:field="${question.isAnswer1}">
         <label for="isAnswer1" class="form-check-label" th:text="#{text.isTrue}">True?</label>
         <textarea type="text" class="form-control"
-                  id="opt1" th:field="${question.opt1}" th:placeholder="#{text.requiredAnswer}"
-                  maxlength="255" rows="4" required></textarea>
+                  id="opt1" th:field="*{opt1}" th:placeholder="#{text.requiredAnswer}"
+                  maxlength="255" rows="4" required th:errorclass="is-invalid"></textarea>
+        <span class="help-block text-danger" th:if="${#fields.hasErrors('opt1')}">
+            <ul>
+                <li th:each="err : ${#fields.errors('opt1')}" th:text="${err}"></li>
+            </ul>
+        </span>
     </div>
 
     <div class="col-md-6">
         <input type="checkbox" class="form-check-input" id="isAnswer2" th:field="${question.isAnswer2}">
         <label for="isAnswer2" class="form-check-label" th:text="#{text.isTrue}">True?</label>
         <textarea type="text" class="form-control"
-                  id="opt2" th:field="${question.opt2}" th:placeholder="#{text.requiredAnswer}"
-                  maxlength="255" rows="4" required></textarea>
+                  id="opt2" th:field="*{opt2}" th:placeholder="#{text.requiredAnswer}"
+                  maxlength="255" rows="4" required th:errorclass="is-invalid"></textarea>
+        <span class="help-block text-danger" th:if="${#fields.hasErrors('opt2')}">
+            <ul>
+                <li th:each="err : ${#fields.errors('opt2')}" th:text="${err}"></li>
+            </ul>
+        </span>
     </div>
 
     <div class="col-md-6">
@@ -24,7 +34,7 @@
         <label for="isAnswer3" class="form-check-label" th:text="#{text.isTrue}">True?</label>
         <textarea type="text" class="form-control" th:placeholder="#{text.answer}"
                   id="opt3" th:field="${question.opt3}"
-                  maxlength="255" rows="4"></textarea>
+                  maxlength="255" rows="4" th:errorclass="is-invalid"></textarea>
     </div>
 
     <div class="col-md-6">
@@ -32,7 +42,7 @@
         <label for="correct" class="form-check-label" th:text="#{text.isTrue}">True?</label>
         <textarea type="text" class="form-control" th:placeholder="#{text.answer}"
                   id="opt4" th:field="${question.opt4}"
-                  maxlength="255" rows="4"></textarea>
+                  maxlength="255" rows="4" th:errorclass="is-invalid"></textarea>
     </div>
 </div>
 </body>

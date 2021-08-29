@@ -9,6 +9,9 @@
     <input type="hidden" th:field="*{rowId}">
     <input type="hidden" th:field="*{type}">
     <div class="row">
+        <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger col-12">
+            <p th:text="#{text.error}"></p>
+        </div>
         <div class="col-sm-6">
             <div th:replace="~{fragments/imageUploader :: imageUploader(${media})}"></div>
         </div>
@@ -17,11 +20,22 @@
                 <label for="question" class="form-label" th:text="#{text.question}">Question</label>
                 <textarea type="text" class="form-control"
                           id="question" th:field="*{question}"
-                          maxlength="255" rows="4" required></textarea>
+                          maxlength="255" rows="4" required th:errorclass="is-invalid"></textarea>
+                <span class="help-block text-danger" th:if="${#fields.hasErrors('question')}">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('question')}" th:text="${err}"></li>
+                    </ul>
+                </span>
             </div>
             <div class="md-3 p-2">
                 <label for="answerTime" class="form-label" th:text="#{text.answerTime}">Question</label>
-                <input type="text" class="form-control" id="answerTime" th:field="*{answerTime}" required>
+                <input type="text" class="form-control" id="answerTime"
+                       th:field="*{answerTime}" required th:errorclass="is-invalid">
+                <span class="help-block text-danger" th:if="${#fields.hasErrors('answerTime')}">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('answerTime')}" th:text="${err}"></li>
+                    </ul>
+                </span>
             </div>
         </div>
     </div>

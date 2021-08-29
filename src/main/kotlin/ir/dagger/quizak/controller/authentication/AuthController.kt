@@ -1,14 +1,13 @@
 package ir.dagger.quizak.controller.authentication
 
-import ir.dagger.quizak.controller.command.UserCommand
+import ir.dagger.quizak.controller.command.AuthCommand
 import ir.dagger.quizak.services.db.UserService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.*
 import java.lang.RuntimeException
+import javax.validation.Valid
 
 @Controller
 class AuthController(
@@ -22,13 +21,17 @@ class AuthController(
 
     @GetMapping("/signup")
     fun signupForm(model: Model): String {
-        model.addAttribute("user", UserCommand())
-        return "authentication/signup"
+        model.addAttribute("user", AuthCommand())
+        return SIGNUP_FORM
     }
 
     @PostMapping("/signup")
-    fun signup(@ModelAttribute user: UserCommand): String {
-        userService.createUser(user)
+    fun signup(
+        @ModelAttribute("user") @Valid user: AuthCommand,
+        userResult: BindingResult,
+    ): String {
+        if(userResult.hasErrors()) return SIGNUP_FORM
+        userService.createUser(user, user.password!!)
         return "redirect:/verifyEmail/id/${user.uniqueName}"
     }
 
@@ -46,5 +49,9 @@ class AuthController(
         //TODO: You know what you need to do
 
         return "redirect:/login"
+    }
+
+    companion object {
+        const val SIGNUP_FORM = "authentication/signup"
     }
 }

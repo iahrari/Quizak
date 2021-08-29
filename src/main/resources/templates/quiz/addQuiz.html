@@ -6,19 +6,33 @@
 <form th:action="@{/quiz/new}" method="post" th:object="${quiz}" enctype="multipart/form-data">
     <input type="hidden" th:field="*{id}">
     <div class="row">
+        <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger col-12">
+            <p th:text="#{text.error}"></p>
+        </div>
         <div class="col-sm-6">
             <div th:replace="~{fragments/imageUploader :: imageUploader(${media})}"></div>
         </div>
         <div class="col-sm-6">
             <div class="md-3 p-2">
                 <label for="quizName" class="form-label" th:text="#{text.name}">Name</label>
-                <input type="text" class="form-control" id="quizName" th:field="*{name}" required autofocus>
+                <input type="text" class="form-control" id="quizName" th:field="*{name}"
+                       required autofocus th:errorclass="is-invalid">
+                <span class="help-block text-danger" th:if="${#fields.hasErrors('name')}">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('name')}" th:text="${err}"></li>
+                    </ul>
+                </span>
             </div>
             <div class="md-3 p-2">
                 <label for="quizDescription" class="form-label" th:text="#{text.description}">Name</label>
                 <textarea type="text" class="form-control"
                           id="quizDescription" th:field="*{description}"
-                          maxlength="255" rows="4"></textarea>
+                          maxlength="255" rows="4" th:errorclass="is-invalid"></textarea>
+                <span class="help-block text-danger" th:if="${#fields.hasErrors('description')}">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('question')}" th:text="${err}"></li>
+                    </ul>
+                </span>
             </div>
             <div class="md-3 p-2">
                 <input type="checkbox" class="form-check-input" id="private" name="private" th:field="*{private}">

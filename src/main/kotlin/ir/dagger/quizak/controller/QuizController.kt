@@ -8,14 +8,19 @@ import org.springframework.http.MediaType
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
+import org.springframework.validation.DirectFieldBindingResult
+import org.springframework.validation.SmartValidator
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
+import javax.validation.Valid
 import kotlin.reflect.full.createInstance
 
 @Controller
 @RequestMapping("/quiz")
 class QuizController(
-    private val quizService: QuizService
+    private val quizService: QuizService,
+    private val validator: SmartValidator,
 ) {
 
     @GetMapping("/{quizId}/show")
@@ -48,7 +53,7 @@ class QuizController(
         model.addAttribute("quiz", quiz)
         model.addAttribute("media", quiz.mediaData)
         model.addAttribute("user", user)
-        return "quiz/addQuiz"
+        return QUIZ_ADD_FORM
     }
 
     @GetMapping("/new")
@@ -57,15 +62,21 @@ class QuizController(
         model.addAttribute("quiz", quiz)
         model.addAttribute("media", quiz.mediaData)
         model.addAttribute("user", user)
-        return "quiz/addQuiz"
+        return QUIZ_ADD_FORM
     }
 
     @PostMapping("/new", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun newQuiz(
-        @ModelAttribute quiz: QuizCommand,
-        @ModelAttribute mediaData: MediaData,
         @AuthenticationPrincipal user: ApplicationUser,
+        @ModelAttribute("media") mediaData: MediaData,
+        @ModelAttribute("quiz") @Valid quiz: QuizCommand,
+        result: BindingResult,
+        model: Model
     ): String {
+        if(result.hasErrors()) {
+            model.addAttribute("user", user)
+            return QUIZ_ADD_FORM
+        }
         val q = quizService.saveQuiz(quiz.apply{ this.mediaData = mediaData }, user)
         return "redirect:/quiz/${q.id}/show"
     }
@@ -86,7 +97,7 @@ class QuizController(
         model.addAttribute("user", user)
         model.addAttribute("media", question.mediaData)
 
-        return "quiz/AddQuestions${quizType}"
+        return addQuestionForm(quizType.name)
     }
 
     @Suppress("SpringMVCViewInspection")
@@ -104,7 +115,7 @@ class QuizController(
         model.addAttribute("user", user)
         model.addAttribute("media", question.mediaData)
 
-        return "quiz/AddQuestions${question.type!!}"
+        return addQuestionForm(question.type!!.name)
     }
 
     @PostMapping(
@@ -114,14 +125,27 @@ class QuizController(
     fun addQuestion(
         @PathVariable quizId: String,
         @PathVariable quizType: QuizType,
-        @ModelAttribute media: MediaData,
         @AuthenticationPrincipal user: ApplicationUser,
-        request: HttpServletRequest
+        @ModelAttribute("media") media: MediaData,
+        result: BindingResult,
+        request: HttpServletRequest,
+        model: Model
     ): String {
         println("Request param: ${request.parameterMap}")
         val question = quizType.questionCommandType.createInstance()
         question.mediaData = media
         quizType.paramFunction(request.parameterMap, question)
+
+        val questionResult = DirectFieldBindingResult(question, "question")
+        validator.validate(question, questionResult)
+
+        if(result.hasErrors() || questionResult.hasErrors()) {
+            question.quizId = quizId
+            model.addAttribute("org.springframework.validation.BindingResult.question", questionResult)
+            model.addAttribute("user", user)
+            model.addAttribute("question", question)
+            return addQuestionForm(question.type!!.name)
+        }
         quizService.saveQuestion(question, user)
         return "redirect:/quiz/${quizId}/show"
     }
@@ -134,5 +158,11 @@ class QuizController(
     ): String {
         quizService.deleteQuestionById(quizId, rowId, user)
         return "redirect:/quiz/${quizId}/show"
+    }
+
+    companion object{
+        const val QUIZ_ADD_FORM= "quiz/addQuiz"
+        fun addQuestionForm(name: String): String =
+            "quiz/AddQuestions$name"
     }
 }

@@ -35,10 +35,10 @@ class UserServiceImpl(
 ) : UserService {
 
     @Transactional
-    override fun createUser(userCommand: UserCommand): UserCommand {
+    override fun createUser(userCommand: UserCommand, password: String): UserCommand {
         //TODO: Add error handling here
         val user = userConverter.convert(userCommand) ?: throw RuntimeException("Wrong user")
-        user.hash = passwordEncoder.encode(userCommand.password)
+        user.hash = passwordEncoder.encode(password)
         val returned = userRepository.save(user)
 
         val emailVerification =

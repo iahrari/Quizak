@@ -6,7 +6,7 @@ import ir.dagger.quizak.controller.command.UserCommand
 import ir.dagger.quizak.db.entity.customers.User
 
 interface UserService {
-    fun createUser(userCommand: UserCommand): UserCommand
+    fun createUser(userCommand: UserCommand, password: String): UserCommand
     fun findUserByUniqueName(uniqueName: String): UserCommand
     fun findUserById(userId: String): UserCommand
     fun verifyEmail(id: String)

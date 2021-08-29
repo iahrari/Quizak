@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
 import java.util.Comparator
 import javax.transaction.Transactional
+import javax.validation.Valid
 import kotlin.reflect.full.createInstance
 
 @Service
@@ -91,7 +92,7 @@ class QuizServiceImpl(
 
     @Transactional
     override fun saveQuestion(
-        questionCommand: BaseQuestionCommand,
+        @Valid questionCommand: BaseQuestionCommand,
         user: ApplicationUser,
     ): BaseQuestionCommand {
         val quiz = quizRepository.findById(questionCommand.quizId!!)

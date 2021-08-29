@@ -1,12 +1,15 @@
 package ir.dagger.quizak.controller.command
 
 import ir.dagger.quizak.db.entity.quiz.QuizType
+import javax.validation.constraints.NotBlank
 
 class MultiChoiceQCommand: BaseQuestionCommand() {
     init {
         type = QuizType.MultiChoice
     }
+    @NotBlank
     var opt1: String? = null
+    @NotBlank
     var opt2: String? = null
     var opt3: String? = null
     var opt4: String? = null

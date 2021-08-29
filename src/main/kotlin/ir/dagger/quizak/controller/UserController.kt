@@ -7,7 +7,9 @@ import ir.dagger.quizak.services.db.UserService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @Controller
 @RequestMapping("/user")
@@ -23,7 +25,7 @@ class UserController(
         model.addAttribute("media", userCommand.mediaData)
         model.addAttribute("userCommand", userCommand)
         model.addAttribute("user", user)
-        return "user/profile"
+        return PROFILE_PAGE
     }
 
     @GetMapping("/profile/myCreations")
@@ -42,9 +44,10 @@ class UserController(
 
     @PostMapping("/profile/update")
     fun updateProfile(
-        @ModelAttribute userCommand: UserCommand,
+        @ModelAttribute @Valid userCommand: UserCommand,
         @ModelAttribute mediaData: MediaData,
         @AuthenticationPrincipal user: ApplicationUser,
+        result: BindingResult
     ): String {
         val updatedUser = userService.updateUser(userCommand.apply {
             this.mediaData = mediaData }, user)
@@ -52,6 +55,14 @@ class UserController(
             username = updatedUser.uniqueName
             mediaId = updatedUser.media?.id
         }
-        return "redirect:/user/profile"
+
+        if(result.hasErrors())
+            return PROFILE_PAGE
+
+        return "redirect:${PROFILE_PAGE}"
+    }
+
+    companion object {
+        const val PROFILE_PAGE = "/user/profile"
     }
 }

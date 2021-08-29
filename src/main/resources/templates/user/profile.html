@@ -7,6 +7,9 @@
 <form th:object="${userCommand}" method="post" th:action="@{/user/profile/update}" enctype="multipart/form-data">
     <input type="hidden" th:field="*{id}">
     <div class="row">
+        <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger col-12">
+            <p th:text="#{text.error}"></p>
+        </div>
         <div class="col-sm-6">
             <div th:replace="~{fragments/imageUploader :: imageUploader(${media})}"></div>
         </div>
@@ -18,31 +21,59 @@
                 <input type="text" class="form-control"
                        id="username" aria-describedby="atSign"
                        th:placeholder="#{text.username}"
-                       th:field="*{uniqueName}" required>
+                       th:field="*{uniqueName}" required th:errorclass="is-invalid">
+                <span class="help-block text-danger" th:if="${#fields.hasErrors('uniqueName')}">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('uniqueName')}" th:text="${err}"></li>
+                    </ul>
+                </span>
             </div>
             <!--Name field-->
             <div class="md-3 p-2">
                 <label for="name" class="form-label" th:text="#{text.name}">Name</label>
-                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                <input type="text" class="form-control" id="name"
+                       th:field="*{name}" required th:errorclass="is-invalid">
+                <span class="help-block text-danger" th:if="${#fields.hasErrors('name')}">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('name')}" th:text="${err}"></li>
+                    </ul>
+                </span>
             </div>
             <!--Family name field-->
             <div class="md-3 p-2">
                 <label for="familyName" class="form-label" th:text="#{text.familyName}">Family Name</label>
-                <input type="text" class="form-control" id="familyName" th:field="*{familyName}" required>
+                <input type="text" class="form-control" id="familyName"
+                       th:field="*{familyName}" required th:errorclass="is-invalid">
+                <span class="help-block text-danger" th:if="${#fields.hasErrors('familyName')}">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('familyName')}" th:text="${err}"></li>
+                    </ul>
+                </span>
             </div>
         </div>
     </div>
 
     <div class="md-3 p-2">
         <label for="userEmail" class="form-label" th:text="#{text.email}">Email Address</label>
-        <input type="email" class="form-control" id="userEmail" th:field="*{email}" required disabled autofocus>
+        <input type="email" class="form-control" id="userEmail"
+               th:field="*{email}" required disabled th:errorclass="is-invalid">
+        <span class="help-block text-danger" th:if="${#fields.hasErrors('email')}">
+            <ul>
+                <li th:each="err : ${#fields.errors('email')}" th:text="${err}"></li>
+            </ul>
+        </span>
     </div>
 
     <div class="md-3 p-2">
         <label for="quizDescription" class="form-label" th:text="#{text.description}">Name</label>
         <textarea type="text" class="form-control"
                   id="quizDescription" th:field="*{description}"
-                  maxlength="255" rows="4"></textarea>
+                  maxlength="255" rows="4" th:errorclass="is-invalid"></textarea>
+        <span class="help-block text-danger" th:if="${#fields.hasErrors('description')}">
+            <ul>
+                <li th:each="err : ${#fields.errors('description')}" th:text="${err}"></li>
+            </ul>
+        </span>
     </div>
 
     <div class="md-3 p-2 row justify-content-center">
