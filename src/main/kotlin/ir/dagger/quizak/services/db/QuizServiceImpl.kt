@@ -7,19 +7,15 @@ import ir.dagger.quizak.controller.command.converters.QuizCommandConverter
 import ir.dagger.quizak.controller.command.converters.QuizConverter
 import ir.dagger.quizak.controller.command.converters.UserCommandConverter
 import ir.dagger.quizak.db.entity.MediaType
-import ir.dagger.quizak.db.entity.quiz.BaseQuestion
 import ir.dagger.quizak.db.entity.quiz.QuestionId
 import ir.dagger.quizak.db.entity.quiz.Quiz
-import ir.dagger.quizak.db.repostiory.ClassRepository
 import ir.dagger.quizak.db.repostiory.QuestionRepository
 import ir.dagger.quizak.db.repostiory.QuizRepository
 import ir.dagger.quizak.db.repostiory.UserRepository
 import ir.dagger.quizak.services.FileService
-import org.aspectj.weaver.patterns.TypePatternQuestions
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
-import java.util.Comparator
 import javax.transaction.Transactional
 import javax.validation.Valid
 import kotlin.reflect.full.createInstance
@@ -27,7 +23,6 @@ import kotlin.reflect.full.createInstance
 @Service
 class QuizServiceImpl(
     private val quizRepository: QuizRepository,
-    private val classRepository: ClassRepository,
     private val questionRepository: QuestionRepository,
     private val userRepository: UserRepository,
     private val quizConverter: QuizConverter,
@@ -101,7 +96,7 @@ class QuizServiceImpl(
         if(quiz.createdBy.id == user.id){
             if(questionCommand.rowId == null)
                 questionCommand.rowId = (quiz.getQuestions().stream()
-                    .max { a, b -> a.id.row!! - b.id.row!! }.orElseThrow().id.row?: 0) + 1
+                    .max { a, b -> a.id.row!! - b.id.row!! }.orElse(null)?.id?.row?: 0) + 1
 
             val question = questionCommand.type!!.converter
                 .createInstance().convert(questionCommand)!!
